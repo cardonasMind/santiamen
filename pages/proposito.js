@@ -24,7 +24,6 @@ export default class extends PureComponent {
                     <div>
                         <h1>Planes a futuro</h1>
                         <p>Apenas somos un pequeño proyecto que se busca un lugar en las reuniones familiares, los parches con los amigos, y los momentos de comida en casa, rápido y sin costo adicional.</p>
-                        <p>Haremos cuanto podamos para ser una pequeña empresa para mitad del 2021, nacida en San Carlos, con visión y acción por el futuro.</p>
                     </div>
                 </main>
 

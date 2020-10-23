@@ -22,7 +22,8 @@ export class MainContextProvider extends PureComponent {
       },
       addProductToOrderList: this.addProductToOrderList,
       removeProductFromOrderList: this.removeProductFromOrderList,
-      sendOrder: this.sendOrder
+      sendOrder: this.sendOrder,
+      resetOrderList: this.resetOrderList
     };
 
     this.baseState = this.state;
@@ -128,6 +129,10 @@ export class MainContextProvider extends PureComponent {
         });
       });
   };
+
+  resetOrderList = () => 
+    this.setState({ orderList: [] });
+    
 
   render() {
     return (

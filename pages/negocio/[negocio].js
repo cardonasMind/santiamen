@@ -89,6 +89,8 @@ export default class extends PureComponent {
         const businessKey = this.props.query.negocio;
         const business = this.context.business[this.context.businessKeys.indexOf(businessKey)];
 
+        const { resetOrderList } = this.context;
+
         return(
             <Fragment>
                 <Head>
@@ -96,7 +98,7 @@ export default class extends PureComponent {
                 </Head>
 
                 <header>
-                    <Header back />
+                    <Header back resetOrderList={resetOrderList} />
     
                     <BusinessCard 
                         photo={business && business.photoURL}

@@ -6,14 +6,16 @@ import { Icon } from 'rsuite';
 
 import Menu from "./Menu";
 
-const Header = ({ back }) => {
+const Header = ({ back, resetOrderList }) => {
     return(
         <div id="header-navigation">
             <span>
                 {back && 
-                    <Link href="/">
-                        <a><Icon icon="angle-left" size="2x" /></a>
-                    </Link>
+                    <div onClick={resetOrderList}>
+                        <Link href="/" >
+                            <a><Icon icon="angle-left" size="2x" /></a>
+                        </Link>
+                    </div>
                 }
             </span>
 
