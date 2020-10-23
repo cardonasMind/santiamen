@@ -1,6 +1,6 @@
 import { PureComponent } from "react";
 
-import { Form, Button, Input, FormGroup, ButtonToolbar, IconButton, Icon } from "rsuite";
+import { Form, Button, Input, FormGroup, IconButton, Icon, Notification } from "rsuite";
 
 import { MainContext } from "../../config/MainContext";
 
@@ -16,14 +16,21 @@ export default class extends PureComponent {
     handleChange = value => this.setState({ name: value });
 
     sendOrder = () => {
-        //const { name, lat, lng } = this.state;
+        const { name, lat, lng } = this.state;
         const { toggleShowFirstCheckoutStage, toggleShowSecondCheckoutStage } = this.props;
-        //const { updateOrderInfo } = this.context;
+        const { sendOrder } = this.context;
 
-        //this.context.updateOrderInfo(name, lat, lng);
-
-        toggleShowFirstCheckoutStage();
-        toggleShowSecondCheckoutStage();
+        if(name !== "") {
+            sendOrder(name, "BUSINESSID", lat, lng, () => {
+                toggleShowFirstCheckoutStage();
+                toggleShowSecondCheckoutStage();}
+            );
+        } else {
+            Notification.info({
+                title: "Espera",
+                description: "Escribe tu nombre."
+            })
+        }
     }
 
     componentDidMount() {
@@ -40,8 +47,8 @@ export default class extends PureComponent {
     }
 
     render() {
-        const { ubication, name } = this.state;
-        const { toggleShowFirstCheckoutStage, toggleShowSecondCheckoutStage } = this.props;
+        const { name } = this.state;
+        const { toggleShowFirstCheckoutStage } = this.props;
 
         return(
             <div id="first-checkout-stage">
@@ -62,10 +69,10 @@ export default class extends PureComponent {
                         <Input size="sm" value={name} onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <ButtonToolbar>
+                        <div id="form-buttons">
                             <Button appearance="primary" onClick={this.sendOrder}>Enviar pedido</Button>
                             <Button onClick={toggleShowFirstCheckoutStage}>Cancelar</Button>
-                        </ButtonToolbar>
+                        </div>
                     </FormGroup>
                 </Form>
 
@@ -82,7 +89,7 @@ export default class extends PureComponent {
 
                     #first-checkout-stage::after {
                         content: "";
-                        background: linear-gradient(rgba(0, 0, 0, .2), rgb(255, 59, 59, .6));
+                        background: linear-gradient(rgba(0, 0, 0, .2), rgb(0, 0, 0, .6));
                         position: absolute;
                         top: 0;
                         right: 0;
@@ -110,6 +117,12 @@ export default class extends PureComponent {
                         top: 1rem;
                         right: 0;
                         z-index: 999;
+                    }
+
+                    #form-buttons {
+                        display: grid;
+                        grid-template-columns: 1fr auto;
+                        grid-gap: .6rem;
                     }
 
                 `}</style>

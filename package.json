@@ -19,5 +19,7 @@
     "react-loading-skeleton": "^2.1.1",
     "rsuite": "^4.8.0"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "keywords": [],
+  "description": ""
 }
