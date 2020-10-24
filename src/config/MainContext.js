@@ -101,7 +101,13 @@ export class MainContextProvider extends PureComponent {
     const { orderList } = this.state;
     const db = firebase.firestore();
 
+    const fullDate = new Date();
+    const date = 
+      `${fullDate.getDate()}/${fullDate.getMonth()+1}/${fullDate.getFullYear()}`;
+
     const order = {
+      timestamp: fullDate,
+      date,
       name,
       lat,
       lng,
