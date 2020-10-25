@@ -10,6 +10,7 @@ import Header from "../../src/components/header";
 import BusinessCard from "../../src/components/BusinessCard";
 import Category from "../../src/components/Category";
 import OrderList from "../../src/components/orderList";
+import BusinessOrders from "../../src/components/businessOrders";
 
 export default class extends PureComponent {
     static contextType = MainContext;
@@ -21,6 +22,26 @@ export default class extends PureComponent {
             products: []
         },
         category2: {
+            title: "",
+            visible: undefined,
+            products: []
+        },
+        category3: {
+            title: "",
+            visible: undefined,
+            products: []
+        },
+        category4: {
+            title: "",
+            visible: undefined,
+            products: []
+        },
+        category5: {
+            title: "",
+            visible: undefined,
+            products: []
+        },
+        category6: {
             title: "",
             visible: undefined,
             products: []
@@ -36,7 +57,7 @@ export default class extends PureComponent {
         const db = firebase.firestore();
 
         /*             GETTING CATEGORIES AND THEIR PRODUCTS            */
-        // Category1
+        // THIS NEED TO BE FIXED
         db.collection(`business/${businessKey}/category1`).get().then(documents => {
             documents.forEach(document => {
                 if(document.id === "info") {
@@ -59,7 +80,6 @@ export default class extends PureComponent {
             })
         })
 
-        // Category2
         db.collection(`business/${businessKey}/category2`).get().then(documents => {
             documents.forEach(document => {
                 if(document.id === "info") {
@@ -81,15 +101,103 @@ export default class extends PureComponent {
                 }
             })
         })
+
+        db.collection(`business/${businessKey}/category3`).get().then(documents => {
+            documents.forEach(document => {
+                if(document.id === "info") {
+                    const { title, visible } = document.data();
+
+                    this.setState(prevState => ({ category3: {...prevState.category3, title, visible } }))
+                } else {
+                    const { name, description, price, photoURL } = document.data();
+
+                    const product = {
+                        key: document.id,
+                        name,
+                        description,
+                        price,
+                        photoURL
+                    };
+
+                    this.setState(prevState => ({ category3: {...prevState.category3, products: [...prevState.category3.products, product] } }))
+                }
+            })
+        })
+
+        db.collection(`business/${businessKey}/category4`).get().then(documents => {
+            documents.forEach(document => {
+                if(document.id === "info") {
+                    const { title, visible } = document.data();
+
+                    this.setState(prevState => ({ category4: {...prevState.category4, title, visible } }))
+                } else {
+                    const { name, description, price, photoURL } = document.data();
+
+                    const product = {
+                        key: document.id,
+                        name,
+                        description,
+                        price,
+                        photoURL
+                    };
+
+                    this.setState(prevState => ({ category4: {...prevState.category4, products: [...prevState.category4.products, product] } }))
+                }
+            })
+        })
+
+        db.collection(`business/${businessKey}/category5`).get().then(documents => {
+            documents.forEach(document => {
+                if(document.id === "info") {
+                    const { title, visible } = document.data();
+
+                    this.setState(prevState => ({ category5: {...prevState.category5, title, visible } }))
+                } else {
+                    const { name, description, price, photoURL } = document.data();
+
+                    const product = {
+                        key: document.id,
+                        name,
+                        description,
+                        price,
+                        photoURL
+                    };
+
+                    this.setState(prevState => ({ category5: {...prevState.category5, products: [...prevState.category5.products, product] } }))
+                }
+            })
+        })
+
+        db.collection(`business/${businessKey}/category6`).get().then(documents => {
+            documents.forEach(document => {
+                if(document.id === "info") {
+                    const { title, visible } = document.data();
+
+                    this.setState(prevState => ({ category6: {...prevState.category6, title, visible } }))
+                } else {
+                    const { name, description, price, photoURL } = document.data();
+
+                    const product = {
+                        key: document.id,
+                        name,
+                        description,
+                        price,
+                        photoURL
+                    };
+
+                    this.setState(prevState => ({ category6: {...prevState.category6, products: [...prevState.category6.products, product] } }))
+                }
+            })
+        })
     }
 
     render() {
-        const { category1, category2 } = this.state;
+        const { category1, category2, category3, category4, category5, category6 } = this.state;
 
         const businessKey = this.props.query.negocio;
         const business = this.context.business[this.context.businessKeys.indexOf(businessKey)];
 
-        const { resetOrderList } = this.context;
+        const { resetOrderList, uid } = this.context;
 
         return(
             <Fragment>
@@ -110,9 +218,17 @@ export default class extends PureComponent {
                 <main>
                     <Category title={category1.title} products={category1.products} />
                     <Category title={category2.title} products={category2.products} />
+                    <Category title={category3.title} products={category3.products} />
+                    <Category title={category4.title} products={category4.products} />
+                    <Category title={category5.title} products={category5.products} />
+                    <Category title={category6.title} products={category6.products} />
                 </main>
 
                 <OrderList />
+
+                {
+                    uid === businessKey && <BusinessOrders />
+                }
 
 
                 <style jsx global>{`

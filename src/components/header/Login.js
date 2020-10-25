@@ -37,20 +37,20 @@ export default class extends PureComponent {
 
                 this.setState({ confirmationResult })
 
-                Notification["success"]({
+                Notification.success({
                     title: "¡Perfecto!",
                     description: "En breves recibirás un código de verificación en tú celular"
                 });
             })
             .catch(error => {
-                Notification["error"]({
-                    title: "Ocurrió un error :(",
+                Notification.error({
+                    title: "Ocurrió un error",
                     description: `Código: ${error.code}. Reinicia la página, y si el problema persiste
                     contacta con un administrador`
                 });
             })
         } else {
-            Notification["info"]({
+            Notification.info({
                 title: "Espera",
                 description: "Por favor verifica tú número, recuerda que debe tener 10 dígitos"
             });
@@ -62,15 +62,24 @@ export default class extends PureComponent {
 
         if(phoneCode.length === 6) {
             confirmationResult.confirm(phoneCode)
+            .then(() => {
+                Notification.success({
+                    title: "Perfecto",
+                    description: '¡Acabas de iniciar sesión!'
+                });
+
+                this.toggleShowLoginDrawer();
+            })
+
             .catch(error => {
-                Notification["error"]({
-                    title: "Ocurrió un error :(",
+                Notification.error({
+                    title: "Ocurrió un error",
                     description: `Código: ${error.code}. Reinicia la página, y si el problema persiste
                     contacta con un administrador`
                 });
             })
         } else {
-            Notification["info"]({
+            Notification.info({
                 title: "Espera",
                 description: "Comprueba tu código de verificación"
             });
@@ -84,10 +93,8 @@ export default class extends PureComponent {
                 <h2 onClick={this.toggleShowLoginDrawer}>Acceder</h2>
                 
                 <Drawer full placement={"bottom"} show={this.state.showLoginDrawer} onHide={this.toggleShowLoginDrawer}>
-                    <Drawer.Header></Drawer.Header>
+                    <Drawer.Header><h1>Accede a tu negocio</h1></Drawer.Header>
                     <Drawer.Body>
-                        <h1>Accede a tu negocio</h1>
-
                         <div id="login-form">
                             {
                                 phoneScreen 
@@ -139,7 +146,6 @@ export default class extends PureComponent {
 
                 <style jsx>{`
                     #login-form {
-                        padding: 2rem;
                         text-align: center;
                     }
 

@@ -1,10 +1,19 @@
 import { PureComponent, Fragment } from "react";
 
+import Link from "next/link";
+
+import { MainContext } from "../src/config/MainContext";
+
 import Header from "../src/components/header";
 import BusinessList from "../src/components/BusinessList";
+import BusinessCard from "../src/components/BusinessCard";
 
 export default class extends PureComponent {
+  static contextType = MainContext;
+
   render() {
+    const { uid, name, photoURL, active } = this.context;
+
     return (
       <Fragment>
         <Header />
@@ -13,6 +22,20 @@ export default class extends PureComponent {
           <h1>Santiamén</h1>
         </header>
 
+        {
+          uid !== "" &&
+            <div id="your-business-card">
+              <h2>Tú negocio</h2>
+              <Link href={`/negocio/${uid}`}><a>
+                <BusinessCard 
+                  photo={photoURL}
+                  name={name}
+                  active={active}
+                />
+              </a></Link>
+            </div>
+        } 
+        
         <main>
           <BusinessList />
         </main>
@@ -33,6 +56,14 @@ export default class extends PureComponent {
             color: white;
             font-size: 2rem;
             margin: 3rem 0;
+          }
+
+          #your-business-card {
+            padding: 1rem;
+            background: white;
+            margin: 0 1rem;
+            margin-top: -2rem;
+            border-radius: .6rem;
           }
         `}</style>
       </Fragment>

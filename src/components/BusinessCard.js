@@ -53,7 +53,7 @@ const BusinessCard = ({ photo, name, active }) => {
                 }
 
                 .businessCard .businessLogo {
-                    background-image: url(${photo});
+                    background-image: url(${photo ? photo : ""});
                     background-size: cover;
                     background-position: center;
                     width: 80px;
