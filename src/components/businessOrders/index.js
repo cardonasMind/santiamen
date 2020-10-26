@@ -2,7 +2,13 @@ import { PureComponent } from "react";
 
 import { Badge, Button, Drawer } from "rsuite";
 
+import { MainContext } from "../../config/MainContext";
+
+import OrderCard from "./OrderCard";
+
 export default class extends PureComponent {
+    static contextType = MainContext;
+
     state = {
         showBusinessOrdersDrawer: false
     }
@@ -12,6 +18,7 @@ export default class extends PureComponent {
 
     render() {
         const { showBusinessOrdersDrawer } = this.state;
+        const { orders } = this.context;
 
         return(
             <div id="business-orders">
@@ -22,7 +29,11 @@ export default class extends PureComponent {
                 <Drawer placement={"bottom"} full show={showBusinessOrdersDrawer} onHide={this.toggleShowBusinessOrdersDrawer}>
                     <Drawer.Header><h1>Pedidos a tu negocio</h1></Drawer.Header>
                     <Drawer.Body>
-                        
+                        {
+                           orders.map(order => 
+                               <OrderCard key={order.key} {...order} />
+                           )
+                        }
                     </Drawer.Body>
                 </Drawer>
 
