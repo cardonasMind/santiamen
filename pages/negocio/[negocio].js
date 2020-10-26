@@ -199,6 +199,10 @@ export default class extends PureComponent {
 
         const { resetOrderList, uid } = this.context;
 
+        const isBusinessOwner = uid === businessKey;
+
+        console.log(this.context)
+
         return(
             <Fragment>
                 <Head>
@@ -224,12 +228,16 @@ export default class extends PureComponent {
                     <Category title={category6.title} products={category6.products} />
                 </main>
 
-                <OrderList />
-
                 {
-                    uid === businessKey && <BusinessOrders />
+                    isBusinessOwner 
+                    ?
+                        null
+                    :
+                        <OrderList businessKey={businessKey} />
                 }
+                
 
+                {isBusinessOwner && <BusinessOrders />}
 
                 <style jsx global>{`
                     body {

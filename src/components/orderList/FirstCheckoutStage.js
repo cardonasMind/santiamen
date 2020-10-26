@@ -7,21 +7,55 @@ import { MainContext } from "../../config/MainContext";
 export default class extends PureComponent {
     static contextType = MainContext;
 
-    state = {
-        name: "",
-        lat: 0,
-        lng: 0
+    constructor() {
+        super();
+
+        this.state = {
+            name: "",
+            map: null,
+            lat: 0,
+            lng: 0
+        }
+    }
+
+    componentDidMount() {
+        const map = L.map('mapId').setView([6.1879896, -74.9976044], 14);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        map.on('click', e => {        
+            const marketLocation = e.latlng;
+            const { lat, lng } = marketLocation;
+
+            L.marker([lat, lng]).addTo(map)
+                .bindPopup('Estás aquí.')
+                .openPopup();
+        });
+        
+        this.setState({ map });
+    }
+
+    renderMap = () => {
+        const { map, lat, lng } = this.state;
+
+        L.marker([lat, lng]).addTo(map)
+            .bindPopup('Estás aquí.')
+            .openPopup();
+
+        map.setView([lat, lng], 18);
     }
 
     handleChange = value => this.setState({ name: value });
 
     sendOrder = () => {
         const { name, lat, lng } = this.state;
-        const { toggleShowFirstCheckoutStage, toggleShowSecondCheckoutStage } = this.props;
+        const { businessKey, toggleShowFirstCheckoutStage, toggleShowSecondCheckoutStage } = this.props;
         const { sendOrder } = this.context;
 
         if(name !== "") {
-            sendOrder(name, "BUSINESSID", lat, lng, () => {
+            sendOrder(name, businessKey, lat, lng, () => {
                 toggleShowFirstCheckoutStage();
                 toggleShowSecondCheckoutStage();}
             );
@@ -33,17 +67,20 @@ export default class extends PureComponent {
         }
     }
 
-    componentDidMount() {
-        const map = L.map('mapid').setView([51.505, -0.09], 13);
+    getUserLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const { coords } = position;
+                this.setState({ lat: coords.latitude, lng: coords.longitude });
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        L.marker([51.5, -0.09]).addTo(map)
-    .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-    .openPopup();
-
+                this.renderMap();
+            })
+        } else { 
+            Notification.error({
+                title: "Ocurrió un error",
+                description: "Parece que tu navegador no permite esto."
+            })
+        }
     }
 
     render() {
@@ -56,10 +93,10 @@ export default class extends PureComponent {
                     <FormGroup>
                         <h2>¿Dónde enviar tu pedido?</h2>
                         <div id="map-container">
-                            <div id="mapid"></div>
+                            <div id="mapId"></div>
 
                             <div id="my-ubication-button">
-                                <IconButton appearance="primary" size="sm" icon={<Icon icon="target" />}>Mi ubicación</IconButton>
+                                <IconButton onClick={this.getUserLocation} appearance="primary" size="sm" icon={<Icon icon="target" />}>Mi ubicación</IconButton>
                             </div>
                         </div>
                     </FormGroup>
@@ -106,7 +143,7 @@ export default class extends PureComponent {
                         position: relative;
                     }
 
-                    #mapid {
+                    #mapId {
                         height: 240px;
                         margin: 0 -4rem;
                     }

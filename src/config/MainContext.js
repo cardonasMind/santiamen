@@ -15,6 +15,7 @@ export class MainContextProvider extends PureComponent {
       name: "",
       photoURL: "",
       active: null,
+      orders: [],
       handleLogout: this.handleLogout,
       
 
@@ -57,24 +58,23 @@ export class MainContextProvider extends PureComponent {
 
 
     /*                  GETTING BUSINESS FROM DB               */
-    db.collection("business").onSnapshot(
-      (docSnapshot) => {
+    db.collection("business").onSnapshot(docSnapshot => {
         this.setState({ business: [], businessKeys: [] }); // Restart state
 
-        docSnapshot.forEach((business) => {
+        docSnapshot.forEach(business => {
           this.setState((prevState) => ({
             business: [...prevState.business, business.data()],
             businessKeys: [...prevState.businessKeys, business.id]
           }));
         });
       },
-      (error) => {
+      error => {
         Notification.error({
           title: "Ocurrió un error",
           description: error
         });
       }
-    );
+    )
   }
 
 
@@ -91,6 +91,9 @@ export class MainContextProvider extends PureComponent {
             const { name, photoURL, active } = userDataFromDb;
 
             this.setState({ name, photoURL, active });
+
+            this.getBusinessOrders(uid);
+            
         } else {
             // If user isn´t in the DB, add it XD
             /*db.collection("users").doc(uid).set({
@@ -134,6 +137,33 @@ export class MainContextProvider extends PureComponent {
             description: error
         });
     })
+  }
+
+
+  getBusinessOrders = uid => {
+    /*                  GETTING ORDERS FOR BUSINESS OWNERS FROM DB               */
+    const db = firebase.firestore();
+    db.collection("business").doc(uid).collection("orders").onSnapshot(docSnapshot => {
+          //this.setState({ business: [], businessKeys: [] }); // Restart state
+
+      docSnapshot.forEach(order => {
+        this.setState(prevState => ({ orders: [...prevState.orders, order.data()] }) );
+
+            /*this.setState((prevState) => ({
+              business: [...prevState.business, business.data()],
+              businessKeys: [...prevState.businessKeys, business.id]
+            }));*/
+        });
+      },
+        error => {
+          Notification.error({
+            title: "Ocurrió un error",
+            description: error
+          });
+        }
+      );
+
+
   }
 
 
@@ -201,10 +231,10 @@ export class MainContextProvider extends PureComponent {
     };
 
     db.collection("business")
-      .doc("0LQSHQoXJmzQDPEIhUxN")
+      .doc(businessKey)
       .collection("orders")
       .add(order)
-      .then((docRef) => {
+      .then(docRef => {
         Notification.success({
           title: "Listo",
           description: "Tu pedido ha sido recibido."

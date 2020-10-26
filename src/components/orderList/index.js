@@ -34,6 +34,7 @@ export default class extends PureComponent {
     render() {
         const { showOrderListDrawer } = this.state;
         const { orderList, removeProductFromOrderList } = this.context;
+        const { businessKey } = this.props;
 
         return(
             <div id="order-list">
@@ -52,7 +53,7 @@ export default class extends PureComponent {
 
                         <div id="order-list-checkout">
                             <h3>Total: ${this.calculateTotalPrice()}</h3>
-                            <Checkout />
+                            <Checkout businessKey={businessKey} />
                         </div>
                     </Drawer.Body>
                 </Drawer>

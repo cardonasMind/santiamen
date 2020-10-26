@@ -20,6 +20,7 @@ export default class extends PureComponent {
 
     render() {
         const { showFirstCheckoutStage, showSecondCheckoutStage } = this.state;
+        const { businessKey } = this.props;
 
         return(
             <Fragment>
@@ -29,6 +30,7 @@ export default class extends PureComponent {
                     {
                         showFirstCheckoutStage && 
                             <FirstCheckoutStage 
+                                businessKey={businessKey}
                                 toggleShowFirstCheckoutStage={this.toggleShowFirstCheckoutStage} 
                                 toggleShowSecondCheckoutStage={this.toggleShowSecondCheckoutStage}    
                             />

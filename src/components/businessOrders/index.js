@@ -34,7 +34,7 @@ export default class extends PureComponent {
                         background: white;
                         border-radius: .6rem .6rem 0 0;
                         z-index: 999;
-                        padding: 1rem 1rem 0;
+                        padding: 1rem;
                         right: 0;
                         left: 0;
                         width: fit-content;
