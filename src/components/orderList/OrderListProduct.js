@@ -4,7 +4,6 @@ import { IconButton, Icon } from "rsuite";
 
 import { NumberToMoney } from "../../config/Utils";
 
-
 const OrderListProduct = ({ id, name, photoURL, price, amount, removeProductFromOrderList }) => {
     return(
         <div className="orderListProduct">

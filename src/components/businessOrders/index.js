@@ -21,25 +21,27 @@ export default class extends PureComponent {
         const { orders } = this.context;
 
         return(
-            <div id="business-orders">
-                <Badge content={4}>
+            <div id="business-orders-container">
+                <Badge content={orders.length}>
                     <Button size="sm" onClick={this.toggleShowBusinessOrdersDrawer}>Ver pedidos</Button>
                 </Badge>
 
                 <Drawer placement={"bottom"} full show={showBusinessOrdersDrawer} onHide={this.toggleShowBusinessOrdersDrawer}>
                     <Drawer.Header><h1>Pedidos a tu negocio</h1></Drawer.Header>
                     <Drawer.Body>
-                        {
-                           orders.map(order => 
-                               <OrderCard key={order.key} {...order} />
-                           )
-                        }
+                        <div id="business-orders">
+                            {
+                            orders.map(order => 
+                                <OrderCard key={order.key} {...order} />
+                            )
+                            }
+                        </div>
                     </Drawer.Body>
                 </Drawer>
 
 
                 <style jsx>{`
-                    #business-orders {
+                    #business-orders-container {
                         position: fixed;
                         bottom: 0;
                         background: white;
@@ -50,6 +52,11 @@ export default class extends PureComponent {
                         left: 0;
                         width: fit-content;
                         margin: auto;
+                    }
+
+                    #business-orders {
+                        display: grid;
+                        grid-gap: 1rem;
                     }
                 `}</style>
             </div>

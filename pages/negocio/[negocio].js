@@ -192,8 +192,6 @@ export default class extends PureComponent {
     }
 
     render() {
-        const { category1, category2, category3, category4, category5, category6 } = this.state;
-
         const businessKey = this.props.query.negocio;
         const business = this.context.business[this.context.businessKeys.indexOf(businessKey)];
 
@@ -201,7 +199,8 @@ export default class extends PureComponent {
 
         const isBusinessOwner = uid === businessKey;
 
-        console.log(this.context)
+        let categories = [this.state];
+        categories = Object.values(categories[0]);
 
         return(
             <Fragment>
@@ -220,23 +219,28 @@ export default class extends PureComponent {
                 </header>
 
                 <main>
-                    <Category title={category1.title} products={category1.products} />
-                    <Category title={category2.title} products={category2.products} />
-                    <Category title={category3.title} products={category3.products} />
-                    <Category title={category4.title} products={category4.products} />
-                    <Category title={category5.title} products={category5.products} />
-                    <Category title={category6.title} products={category6.products} />
+                    {
+                        !isBusinessOwner &&
+                            categories.length > 0 &&
+                                categories.map((category, index) => 
+                                    category.visible ?
+                                        category.products.length > 0 &&
+                                            <Category key={index} title={category.title} products={category.products} />     
+                                    :
+                                        <Category />
+                                )
+                    }
+
+                    {
+                        isBusinessOwner &&
+                            categories.map((category, index) => 
+                                <Category key={index} businessOwner={true} title={category.title} products={category.products} />
+                            )
+                    }       
                 </main>
 
-                {
-                    isBusinessOwner 
-                    ?
-                        null
-                    :
-                        <OrderList businessKey={businessKey} />
-                }
+                {!isBusinessOwner && <OrderList businessKey={businessKey} />}
                 
-
                 {isBusinessOwner && <BusinessOrders />}
 
                 <style jsx global>{`
