@@ -4,7 +4,7 @@ import { MainContext } from "../config/MainContext";
 
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
-import { Button, Icon, Drawer, Form, FormGroup, Input, Toggle, Notification, Modal } from "rsuite";
+import { Button, Icon, Drawer, Form, FormGroup, Input, InputNumber, Toggle, Notification, Modal } from "rsuite";
 
 import Product from "./Product";
 
@@ -63,6 +63,10 @@ class UpdateCategoryForm extends PureComponent {
                 </FormGroup>
 
                 <style jsx>{`
+                    h2 {
+                        margin-bottom: .4rem;
+                    }
+
                     #category-visible {
                         display: inline-flex;
                         grid-gap: .6rem;
@@ -88,34 +92,54 @@ class AddNewProductForm extends PureComponent {
         description: ""
     }
 
+    handleChange = (value, e) => this.setState({ [e.target.name]: e.target.value });
+
     addNewProduct = () => {
         const { name, price, photoURL, description } = this.state;
         const { id, toggleShowAddProductDrawer, addNewProduct } = this.props;
 
-        addNewProduct(`category${id}`, name, price, photoURL, description);
-        toggleShowAddProductDrawer();
+        if(name !== "" && price != 0) {
+            addNewProduct(`category${id}`, name, price, photoURL, description);
+            toggleShowAddProductDrawer();
+        } else {
+            Notification.info({
+                title: "Espera",
+                description: "Nombre y precio no pueden estar vacios."
+            });
+        }
+
+        
     }
 
 
 
     render() {
+        const { name, price, description } = this.state;
         const { toggleShowAddProductDrawer } = this.props;
 
         return(
             <Form> 
                 <FormGroup>
                     <h2>Nombre producto</h2>
-                    <Input size="sm" />
+                    <Input name="name" value={name} size="sm" onChange={this.handleChange} />
                 </FormGroup>
 
                 <FormGroup>
                     <h2>Precio</h2>
-                    <Input size="sm" />
+                    <InputNumber name="price" value={price} onChange={this.handleChange} style={{ width: "auto" }} prefix="$" min={1} />
+                    <p>* Escribe el precio sin puntos ni comas.</p>
                 </FormGroup>
 
                 <FormGroup>
                     <h2>Descripción</h2>
-                    <Input size="sm" />
+                    <Input 
+                        name="description" value={description} onChange={this.handleChange}
+                        componentClass="textarea" rows={3} style={{ minWidth: "100%" }}
+                    />
+                </FormGroup>
+
+                <FormGroup>
+                    <h2>Imágen</h2>
                 </FormGroup>
 
                 <FormGroup>
@@ -126,6 +150,10 @@ class AddNewProductForm extends PureComponent {
                 </FormGroup>
 
                 <style jsx>{`
+                    h2 {
+                        margin-bottom: .4rem;
+                    }
+
                     #add-product-buttons {
                         display: grid;
                         grid-template-columns: 1fr 1fr;
@@ -148,9 +176,10 @@ class ProductWithButtons extends PureComponent {
         this.setState(prevState => ({ showDeleteProductModal: !prevState.showDeleteProductModal }))
 
     deleteProduct = () => {
+        const { id, category, deleteProduct } = this.props;
 
-
-
+        deleteProduct(`category${category}`, id);
+        this.toggleShowDeleteProductModal();
     }
 
     render() {
@@ -176,7 +205,7 @@ class ProductWithButtons extends PureComponent {
                                 }}
                             />
                         </div>
-                            Estás a punto de eliminar <b>{name}</b>😢, recuerda que esta acción no se puede deshacer.
+                        <p style={{ textAlign: "justify" }}>Estás a punto de eliminar <b>{name}</b>😢, recuerda que esta acción no se puede deshacer.</p>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.deleteProduct} color="red">
@@ -191,7 +220,9 @@ class ProductWithButtons extends PureComponent {
 
                 <style jsx>{`
                     .productWithButtons {
-
+                        display: grid;
+                        grid-gap: .6rem;
+                        text-align: center;
                     }
                 `}</style>
             </div>
@@ -221,7 +252,7 @@ export default class extends PureComponent {
     render() {
         const { showModifyCategoryDrawer, showAddProductDrawer } = this.state;
         const { businessOwner = false, id, visible, title = "", products = [] } = this.props;
-        const { updateCategory, addNewProduct } = this.context;
+        const { updateCategory, addNewProduct, deleteProduct } = this.context;
 
         return(
             <div className="category">
@@ -267,6 +298,7 @@ export default class extends PureComponent {
                                             description={product.description}
                                             price={product.price}
                                             photoURL={product.photoURL}
+                                            deleteProduct={deleteProduct}
                                         />
                                     :
                                         <Product
@@ -352,6 +384,7 @@ export default class extends PureComponent {
                         display: flex;
                         justify-content: center;
                         align-items: center;
+                        margin-top: auto;
                     }
 
                     .addNewProductContainer .addNewProduct {

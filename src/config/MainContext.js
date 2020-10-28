@@ -21,6 +21,7 @@ export class MainContextProvider extends PureComponent {
             processOrder: this.processOrder,
             updateCategory: this.updateCategory,
             addNewProduct: this.addNewProduct,
+            deleteProduct: this.deleteProduct,
             
             
 
@@ -243,6 +244,23 @@ export class MainContextProvider extends PureComponent {
             });
         })
         .catch(error => {
+            Notification.error({
+                title: "Ocurrió un error",
+                description: error
+            });
+        });
+    }
+
+    deleteProduct = (category, productId) => {
+        const { uid } = this.state;
+        const db = firebase.firestore();
+
+        db.collection('business').doc(uid).collection(category).doc(productId).delete().then(() => {
+            Notification.success({
+                title: "Listo",
+                description: "Producto eliminado correctamente."
+            });
+        }).catch(error => {
             Notification.error({
                 title: "Ocurrió un error",
                 description: error
