@@ -18,7 +18,7 @@ export default class extends PureComponent {
 
     render() {
         const { showBusinessOrdersDrawer } = this.state;
-        const { orders } = this.context;
+        const { orders, processOrder } = this.context;
 
         return(
             <div id="business-orders-container">
@@ -32,7 +32,7 @@ export default class extends PureComponent {
                         <div id="business-orders">
                             {
                             orders.map(order => 
-                                <OrderCard key={order.key} {...order} />
+                                <OrderCard key={order.key} id={order.key} processOrder={processOrder} {...order} />
                             )
                             }
                         </div>

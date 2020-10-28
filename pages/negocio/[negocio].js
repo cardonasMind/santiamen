@@ -11,6 +11,7 @@ import BusinessCard from "../../src/components/BusinessCard";
 import Category from "../../src/components/Category";
 import OrderList from "../../src/components/orderList";
 import BusinessOrders from "../../src/components/businessOrders";
+import EditBusiness from "../../src/components/EditBusiness";
 
 export default class extends PureComponent {
     static contextType = MainContext;
@@ -57,138 +58,38 @@ export default class extends PureComponent {
         const db = firebase.firestore();
 
         /*             GETTING CATEGORIES AND THEIR PRODUCTS            */
-        // THIS NEED TO BE FIXED
-        db.collection(`business/${businessKey}/category1`).get().then(documents => {
-            documents.forEach(document => {
-                if(document.id === "info") {
-                    const { title, visible } = document.data();
+        for(let i = 1; i < 7; i++) {
+            db.collection(`business/${businessKey}/category${i}`).onSnapshot(documents => {
+                // Restart
+                this.setState({ [`category${i}`]: { title: "", visible: undefined, products: [] } });
 
-                    this.setState(prevState => ({ category1: {...prevState.category1, title, visible } }))
-                } else {
-                    const { name, description, price, photoURL } = document.data();
+                documents.forEach(document => {
+                    if(document.id === "info") {
+                        const { title, visible } = document.data();
 
-                    const product = {
-                        key: document.id,
-                        name,
-                        description,
-                        price,
-                        photoURL
-                    };
+                        this.setState(prevState => ({ [`category${i}`]: {...prevState[`category${i}`], title, visible } }))
+                    } else {
+                        const { name, description, price, photoURL } = document.data();
+    
+                        const product = {
+                            key: document.id,
+                            name,
+                            description,
+                            price,
+                            photoURL
+                        };
 
-                    this.setState(prevState => ({ category1: {...prevState.category1, products: [...prevState.category1.products, product] } }))
-                }
+                        this.setState(prevState => ({ [`category${i}`]: {...prevState[`category${i}`], products: [...prevState[`category${i}`].products, product] } }))
+                    }
+                })
+            },
+            error => {
+                Notification.error({
+                    title: "Ocurrió un error",
+                    description: error
+                });
             })
-        })
-
-        db.collection(`business/${businessKey}/category2`).get().then(documents => {
-            documents.forEach(document => {
-                if(document.id === "info") {
-                    const { title, visible } = document.data();
-
-                    this.setState(prevState => ({ category2: {...prevState.category2, title, visible } }))
-                } else {
-                    const { name, description, price, photoURL } = document.data();
-
-                    const product = {
-                        key: document.id,
-                        name,
-                        description,
-                        price,
-                        photoURL
-                    };
-
-                    this.setState(prevState => ({ category2: {...prevState.category2, products: [...prevState.category2.products, product] } }))
-                }
-            })
-        })
-
-        db.collection(`business/${businessKey}/category3`).get().then(documents => {
-            documents.forEach(document => {
-                if(document.id === "info") {
-                    const { title, visible } = document.data();
-
-                    this.setState(prevState => ({ category3: {...prevState.category3, title, visible } }))
-                } else {
-                    const { name, description, price, photoURL } = document.data();
-
-                    const product = {
-                        key: document.id,
-                        name,
-                        description,
-                        price,
-                        photoURL
-                    };
-
-                    this.setState(prevState => ({ category3: {...prevState.category3, products: [...prevState.category3.products, product] } }))
-                }
-            })
-        })
-
-        db.collection(`business/${businessKey}/category4`).get().then(documents => {
-            documents.forEach(document => {
-                if(document.id === "info") {
-                    const { title, visible } = document.data();
-
-                    this.setState(prevState => ({ category4: {...prevState.category4, title, visible } }))
-                } else {
-                    const { name, description, price, photoURL } = document.data();
-
-                    const product = {
-                        key: document.id,
-                        name,
-                        description,
-                        price,
-                        photoURL
-                    };
-
-                    this.setState(prevState => ({ category4: {...prevState.category4, products: [...prevState.category4.products, product] } }))
-                }
-            })
-        })
-
-        db.collection(`business/${businessKey}/category5`).get().then(documents => {
-            documents.forEach(document => {
-                if(document.id === "info") {
-                    const { title, visible } = document.data();
-
-                    this.setState(prevState => ({ category5: {...prevState.category5, title, visible } }))
-                } else {
-                    const { name, description, price, photoURL } = document.data();
-
-                    const product = {
-                        key: document.id,
-                        name,
-                        description,
-                        price,
-                        photoURL
-                    };
-
-                    this.setState(prevState => ({ category5: {...prevState.category5, products: [...prevState.category5.products, product] } }))
-                }
-            })
-        })
-
-        db.collection(`business/${businessKey}/category6`).get().then(documents => {
-            documents.forEach(document => {
-                if(document.id === "info") {
-                    const { title, visible } = document.data();
-
-                    this.setState(prevState => ({ category6: {...prevState.category6, title, visible } }))
-                } else {
-                    const { name, description, price, photoURL } = document.data();
-
-                    const product = {
-                        key: document.id,
-                        name,
-                        description,
-                        price,
-                        photoURL
-                    };
-
-                    this.setState(prevState => ({ category6: {...prevState.category6, products: [...prevState.category6.products, product] } }))
-                }
-            })
-        })
+        }
     }
 
     render() {
@@ -216,6 +117,10 @@ export default class extends PureComponent {
                         name={business && business.name}
                         active={business && business.active}
                     />
+
+                    {
+                        isBusinessOwner && <EditBusiness />
+                    }
                 </header>
 
                 <main>
@@ -227,14 +132,14 @@ export default class extends PureComponent {
                                         category.products.length > 0 &&
                                             <Category key={index} title={category.title} products={category.products} />     
                                     :
-                                        <Category />
+                                        <Category key={index} />
                                 )
                     }
 
                     {
                         isBusinessOwner &&
                             categories.map((category, index) => 
-                                <Category key={index} businessOwner={true} title={category.title} products={category.products} />
+                                <Category key={index} id={index+1} businessOwner={true} visible={category.visible} title={category.title} products={category.products} />
                             )
                     }       
                 </main>
@@ -269,7 +174,7 @@ export default class extends PureComponent {
                         background: linear-gradient(transparent, #121212);
                         z-index: -1;
                     }
-    
+
                     .businessCard {
                         background: transparent !important;
                         border: none !important;

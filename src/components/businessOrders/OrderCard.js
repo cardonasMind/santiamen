@@ -28,9 +28,15 @@ export default class extends PureComponent {
             .openPopup();
     }
 
+    processOrder = () => {
+        const { id, processOrder } = this.props;
+
+        processOrder(id);
+    }
+
     render() {
         const { showOrderDetailsDrawer, mapRef } = this.state;
-        const { key, date, name, order } = this.props;
+        const { date, name, order } = this.props;
 
         return(
             <div className="orderCard">
@@ -57,7 +63,7 @@ export default class extends PureComponent {
                             }
                         </div>
 
-                        <Button appearance="primary">Se envió el pedido</Button>
+                        <Button appearance="primary" block onClick={this.processOrder}>Se envió el pedido</Button>
                     </Drawer.Body>
                 </Drawer>
     
@@ -89,6 +95,7 @@ export default class extends PureComponent {
                     #order-products {
                         display: grid;
                         grid-gap: 1rem;
+                        margin-bottom: 1rem;
                     }
                 `}</style>
             </div>

@@ -17,6 +17,10 @@ export class MainContextProvider extends PureComponent {
             active: null,
             orders: [],
             handleLogout: this.handleLogout,
+            updateBusiness: this.updateBusiness,
+            processOrder: this.processOrder,
+            updateCategory: this.updateCategory,
+            addNewProduct: this.addNewProduct,
             
             
 
@@ -137,7 +141,7 @@ export class MainContextProvider extends PureComponent {
     getBusinessOrders = uid => {
         /*                  GETTING ORDERS FOR BUSINESS OWNERS FROM DB               */
         const db = firebase.firestore();
-        db.collection("business").doc(uid).collection("orders").onSnapshot(docSnapshot => {
+        db.collection("business").doc(uid).collection("orders").where("sent", "==", false).onSnapshot(docSnapshot => {
             this.setState({ orders: [] }); // Restart state
     
             docSnapshot.forEach(order => {
@@ -150,6 +154,95 @@ export class MainContextProvider extends PureComponent {
             });
         },
         error => {
+            Notification.error({
+                title: "Ocurrió un error",
+                description: error
+            });
+        });
+    }
+
+    updateBusiness = (active, name) => {
+        const { uid } = this.state;
+        const db = firebase.firestore();
+
+        db.collection('business').doc(uid).update({
+            active,
+            name
+        })
+        .then(() => {
+            Notification.success({
+                title: "Listo",
+                description: `Tu negocio ha sido actualizado.`
+            });
+        })
+        .catch(error => {
+            Notification.error({
+                title: "Ocurrió un error",
+                description: error
+            });
+        });
+    }
+
+    processOrder = orderId => {
+        const { uid } = this.state;
+        const db = firebase.firestore();
+
+        db.collection('business').doc(uid).collection('orders').doc(orderId).update({
+            sent: true
+        })
+        .then(() => {
+            Notification.success({
+                title: "Listo",
+                description: `Has enviado la orden ${orderId}`
+            });
+        })
+        .catch(error => {
+            Notification.error({
+                title: "Ocurrió un error",
+                description: error
+            });
+        });
+    }
+
+    updateCategory = (category, title, visible) => {
+        const { uid } = this.state;
+        const db = firebase.firestore();
+
+        db.collection('business').doc(uid).collection(category).doc('info').update({
+            title,
+            visible
+        })
+        .then(() => {
+            Notification.success({
+                title: "Listo",
+                description: `Categoría actualizada.`
+            });
+        })
+        .catch(error => {
+            Notification.error({
+                title: "Ocurrió un error",
+                description: error
+            });
+        });
+    }
+
+    addNewProduct = (category, name, price, photoURL, description ) => {
+        const { uid } = this.state;
+        const db = firebase.firestore();
+
+        db.collection('business').doc(uid).collection(category).add({
+            name,
+            price,
+            photoURL,
+            description
+        })
+        .then(docRef => {
+            Notification.success({
+                title: "Perfecto",
+                description: `Acabas de agregar un nuevo producto: ${name}`
+            });
+        })
+        .catch(error => {
             Notification.error({
                 title: "Ocurrió un error",
                 description: error

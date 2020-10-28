@@ -15,58 +15,58 @@ export default class extends PureComponent {
     const { uid, name, photoURL, active } = this.context;
 
     return (
-      <Fragment>
-        <Header />
+        <Fragment>
+            <Header />
 
-        <header>
-          <h1>Santiamén</h1>
-        </header>
+            <header>
+                <h1>Santiamén</h1>
+            </header>
 
-        {
-          uid !== "" &&
-            <div id="your-business-card">
-              <h2>Tú negocio</h2>
-              <Link href={`/negocio/${uid}`}><a>
-                <BusinessCard 
-                  photo={photoURL}
-                  name={name}
-                  active={active}
-                />
-              </a></Link>
-            </div>
-        } 
+            {
+                uid !== "" &&
+                    <div id="your-business-card">
+                        <h2>Tú negocio</h2>
+                        <Link href={`/negocio/${uid}`}><a>
+                            <BusinessCard 
+                                photo={photoURL}
+                                name={name}
+                                active={active}
+                            />
+                        </a></Link>
+                    </div>
+            } 
         
-        <main>
-          <BusinessList />
-        </main>
+            <main>
+                <BusinessList />
+            </main>
 
-        <style jsx global>{`
-          header {
-            background-color: var(--red);
-            background-image: url("/images/index-background.jpg");
-            background-attachment: fixed;
-            background-size: contain;
-            height: 180px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-          }
+            <style jsx global>{`
+                header {
+                    background-color: var(--red);
+                    background-image: url("/images/index-background.jpg");
+                    background-attachment: fixed;
+                    background-size: contain;
+                    height: 180px;
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: center;
+                }
 
-          header h1 {
-            color: white;
-            font-size: 2rem;
-            margin: 3rem 0;
-          }
+                header h1 {
+                    color: white;
+                    font-size: 2rem;
+                    margin: 3rem 0;
+                }
 
-          #your-business-card {
-            padding: 1rem;
-            background: white;
-            margin: 0 1rem;
-            margin-top: -2rem;
-            border-radius: .6rem;
-          }
-        `}</style>
-      </Fragment>
-    );
-  }
+                #your-business-card {
+                    padding: 1rem;
+                    background: white;
+                    margin: 0 1rem;
+                    margin-top: -2rem;
+                    border-radius: .6rem;
+                }
+            `}</style>
+        </Fragment>
+        );
+    }
 }
