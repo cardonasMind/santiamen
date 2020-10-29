@@ -12,8 +12,11 @@ const OrderListProduct = ({ id, name, photoURL, price, amount, removeProductFrom
                 <h2><div className="orderListProductAmount">x{amount}</div> {name}</h2>
                 <h3 className="orderListProductPrice">$ {NumberToMoney(price)}</h3>
             </div>
-            <IconButton color="red" icon={<Icon icon="trash-o" />} onClick={() => removeProductFromOrderList(id)} />
-
+            {
+                removeProductFromOrderList && 
+                    <IconButton color="red" icon={<Icon icon="trash-o" />} onClick={() => removeProductFromOrderList(id)} />
+            }
+            
             <style jsx>{`
                 .orderListProduct {
                     display: grid;

@@ -12,6 +12,8 @@ export default class extends PureComponent {
 
         this.state = {
             name: "",
+            marker: undefined,
+            details: "",
             map: null,
             lat: 0,
             lng: 0
@@ -25,44 +27,48 @@ export default class extends PureComponent {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
+        // Toggle users to set point
         map.on('click', e => {        
-            const marketLocation = e.latlng;
-            const { lat, lng } = marketLocation;
+            const markerLocation = e.latlng;
+            const { lat, lng } = markerLocation;
 
-            L.marker([lat, lng]).addTo(map)
-                .bindPopup('Estás aquí.')
-                .openPopup();
+            this.setState({ lat, lng });
+            this.renderMapMarker();
         });
         
         this.setState({ map });
     }
 
-    renderMap = () => {
-        const { map, lat, lng } = this.state;
+    renderMapMarker = () => {
+        const { map, marker, lat, lng } = this.state;
 
-        L.marker([lat, lng]).addTo(map)
-            .bindPopup('Estás aquí.')
-            .openPopup();
+        if(marker !== undefined) map.removeLayer(marker)
 
-        map.setView([lat, lng], 18);
+        const newMarker = L.marker([lat, lng]).addTo(map).bindPopup('Estás aquí.').openPopup();
+
+        this.setState({ marker: newMarker });
+
+        map.addLayer(newMarker);
+
+        //map.setView([lat, lng], 16);
     }
 
-    handleChange = value => this.setState({ name: value });
+    handleChange = (value, e) => this.setState({ [e.target.name]: e.target.value });
 
     sendOrder = () => {
-        const { name, lat, lng } = this.state;
+        const { name, details, lat, lng } = this.state;
         const { businessKey, toggleShowFirstCheckoutStage, toggleShowSecondCheckoutStage } = this.props;
         const { sendOrder } = this.context;
 
-        if(name !== "") {
-            sendOrder(name, businessKey, lat, lng, () => {
+        if(name !== "" && details !== "" && lat !== 0 && lng !== 0) {
+            sendOrder(name, details, businessKey, lat, lng, () => {
                 toggleShowFirstCheckoutStage();
                 toggleShowSecondCheckoutStage();}
             );
         } else {
             Notification.info({
                 title: "Espera",
-                description: "Escribe tu nombre."
+                description: "Completa todos los campos."
             })
         }
     }
@@ -73,7 +79,7 @@ export default class extends PureComponent {
                 const { coords } = position;
                 this.setState({ lat: coords.latitude, lng: coords.longitude });
 
-                this.renderMap();
+                this.renderMapMarker();
             })
         } else { 
             Notification.error({
@@ -84,7 +90,7 @@ export default class extends PureComponent {
     }
 
     render() {
-        const { name } = this.state;
+        const { name, details } = this.state;
         const { toggleShowFirstCheckoutStage } = this.props;
 
         return(
@@ -99,11 +105,18 @@ export default class extends PureComponent {
                                 <IconButton onClick={this.getUserLocation} appearance="primary" size="sm" icon={<Icon icon="target" />}>Mi ubicación</IconButton>
                             </div>
                         </div>
+                        * Haz click sobre el mapa para señalar dónde enviar tu pedido.
+                    </FormGroup>
+
+                    <FormGroup>
+                        <h2>Indicaciones</h2>
+                        <Input name="details" size="sm" placeholder="Casa color blanco al lado de..." value={details} onChange={this.handleChange} />
+                        * Ayúdanos a encontrarte más fácilmente.
                     </FormGroup>
 
                     <FormGroup>
                         <h2>Digíta tu nombre</h2>
-                        <Input size="sm" value={name} onChange={this.handleChange} />
+                        <Input name="name" size="sm" value={name} onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
                         <div id="form-buttons">
@@ -121,13 +134,14 @@ export default class extends PureComponent {
                         color: white;
                         z-index: -1;
                         position: relative;
-                        padding: 2rem 4rem;
+                        padding: 2rem 4rem 10rem 4rem;
+                        overflow-x: auto;
                     }
 
                     #first-checkout-stage::after {
                         content: "";
                         background: linear-gradient(rgba(0, 0, 0, .2), rgb(0, 0, 0, .6));
-                        position: absolute;
+                        position: fixed;
                         top: 0;
                         right: 0;
                         bottom: 0;

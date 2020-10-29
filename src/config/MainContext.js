@@ -31,6 +31,7 @@ export class MainContextProvider extends PureComponent {
             orderList: [],
             orderInfo: {
                 name: "",
+                details: "",
                 lat: 0,
                 lng: 0
             },
@@ -319,20 +320,23 @@ export class MainContextProvider extends PureComponent {
         this.setState({ orderList: newOrderList });
     };
 
-    sendOrder = (name, businessKey, lat, lng, secondCheckoutStage) => {
-        this.setState({ orderInfo: { name, lat, lng } });
+    sendOrder = (name, details, businessKey, lat, lng, secondCheckoutStage) => {
+        this.setState({ orderInfo: { name, details, lat, lng } });
     
         const { orderList } = this.state;
 
         const db = firebase.firestore();
     
         const fullDate = new Date();
-        const date = `${fullDate.getDate()}/${fullDate.getMonth()+1}/${fullDate.getFullYear()}`;
+        const humanDate = fullDate.toLocaleString('es-CO', { hour12: true }).split(",");
+        const date = `${humanDate[0]} - ${humanDate[1]}`
     
         const order = {
             timestamp: fullDate,
             date,
             name,
+            details,
+            sent: false,
             lat,
             lng,
             order: orderList
@@ -345,8 +349,6 @@ export class MainContextProvider extends PureComponent {
             });
     
             secondCheckoutStage();
-    
-            this.resetOrderList();
         })
         .catch(error => {
             Notification.error({
