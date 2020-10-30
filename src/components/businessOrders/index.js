@@ -31,9 +31,9 @@ export default class extends PureComponent {
                     <Drawer.Body>
                         <div id="business-orders">
                             {
-                            orders.map(order => 
-                                <OrderCard key={order.key} id={order.key} processOrder={processOrder} {...order} />
-                            )
+                                orders.map(order => 
+                                    <OrderCard key={order.key} id={order.key} processOrder={processOrder} {...order} />
+                                )
                             }
                         </div>
                     </Drawer.Body>

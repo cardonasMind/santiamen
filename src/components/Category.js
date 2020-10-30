@@ -4,10 +4,11 @@ import { MainContext } from "../config/MainContext";
 
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
-import { Button, Icon, Drawer, Form, FormGroup, Input, InputNumber, Toggle, Notification, Modal } from "rsuite";
+import { Uploader, Button, Icon, Drawer, Form, FormGroup, Input, InputNumber, Toggle, Notification, Modal } from "rsuite";
+
+import firebase from "../config/firebase";
 
 import Product from "./Product";
-
 
 class UpdateCategoryForm extends PureComponent {
     state = {
@@ -84,6 +85,29 @@ class UpdateCategoryForm extends PureComponent {
 }
 
 
+//          THEN DELETE OR CHANGE THIS TO MAKE IT MORE "COMPONENT"
+class PreviewAndGetImage extends PureComponent {
+    handleUpload = e => {
+        const file = e.blobFile;
+        const reader = new FileReader();
+        
+        // Set the image once loaded into file reader
+        reader.readAsDataURL(file);
+
+        reader.onload = e => {
+            this.props.handleImage(e.target.result);
+        }
+    }
+
+    render() {
+        return(
+            <Uploader action="" draggable onUpload={this.handleUpload}>
+                {this.props.children}
+            </Uploader>
+        )
+    }
+}
+
 class AddNewProductForm extends PureComponent {
     state = {
         name: "",
@@ -94,39 +118,40 @@ class AddNewProductForm extends PureComponent {
 
     handleChange = (value, e) => this.setState({ [e.target.name]: e.target.value });
 
+    handlePrice = price => this.setState({ price });
+
+    handlePhotoURL = photoURL => this.setState({ photoURL });
+
     addNewProduct = () => {
         const { name, price, photoURL, description } = this.state;
         const { id, toggleShowAddProductDrawer, addNewProduct } = this.props;
 
-        if(name !== "" && price != 0) {
-            addNewProduct(`category${id}`, name, price, photoURL, description);
-            toggleShowAddProductDrawer();
+        if(name !== "" && price !== 0 && photoURL !== "") {
+            addNewProduct(`category${id}`, name, price, photoURL, description, toggleShowAddProductDrawer);
         } else {
             Notification.info({
                 title: "Espera",
-                description: "Nombre y precio no pueden estar vacios."
+                description: "Nombre, precio e imágen no pueden estar vacios."
             });
-        }
-
-        
+        }   
     }
 
 
 
     render() {
-        const { name, price, description } = this.state;
+        const { name, price, description, photoURL } = this.state;
         const { toggleShowAddProductDrawer } = this.props;
 
         return(
             <Form> 
                 <FormGroup>
-                    <h2>Nombre producto</h2>
+                    <h2>Nombre del producto</h2>
                     <Input name="name" value={name} size="sm" onChange={this.handleChange} />
                 </FormGroup>
 
                 <FormGroup>
                     <h2>Precio</h2>
-                    <InputNumber name="price" value={price} onChange={this.handleChange} style={{ width: "auto" }} prefix="$" min={1} />
+                    <InputNumber name="price" step={50} value={price} onChange={this.handlePrice} style={{ width: "auto" }} prefix="$" min={50} />
                     <p>* Escribe el precio sin puntos ni comas.</p>
                 </FormGroup>
 
@@ -140,6 +165,12 @@ class AddNewProductForm extends PureComponent {
 
                 <FormGroup>
                     <h2>Imágen</h2>
+                    <div id="product-image">
+                        <div id="product-image-preview" />
+                        <PreviewAndGetImage handleImage={this.handlePhotoURL} >
+                            <p>Seleccionar imágen</p>
+                        </PreviewAndGetImage>
+                    </div>
                 </FormGroup>
 
                 <FormGroup>
@@ -152,6 +183,22 @@ class AddNewProductForm extends PureComponent {
                 <style jsx>{`
                     h2 {
                         margin-bottom: .4rem;
+                    }
+
+                    #product-image {
+                        display: grid;
+                        grid-template-columns: auto 1fr;
+                        grid-gap: .6rem;
+                    }
+
+                    #product-image-preview {
+                        width: 10rem;
+                        height: 20rem;
+                        border-radius: .6rem;
+                        background-color: rgba(0, 0, 0, .6);
+                        background-image: url(${photoURL ? photoURL : ""});
+                        background-size: cover;
+                        background-position: center;
                     }
 
                     #add-product-buttons {
@@ -205,7 +252,7 @@ class ProductWithButtons extends PureComponent {
                                 }}
                             />
                         </div>
-                        <p style={{ textAlign: "justify" }}>Estás a punto de eliminar <b>{name}</b>😢, recuerda que esta acción no se puede deshacer.</p>
+                        <p style={{ textAlign: "justify" }}>Estás a punto de eliminar <b>{name}</b>, recuerda que esta acción no se puede deshacer.</p>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.deleteProduct} color="red">

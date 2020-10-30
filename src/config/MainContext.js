@@ -143,7 +143,7 @@ export class MainContextProvider extends PureComponent {
     getBusinessOrders = uid => {
         /*                  GETTING ORDERS FOR BUSINESS OWNERS FROM DB               */
         const db = firebase.firestore();
-        db.collection("business").doc(uid).collection("orders").where("sent", "==", false).onSnapshot(docSnapshot => {
+        db.collection("business").doc(uid).collection("orders").where("sent", "==", false).orderBy("timestamp", "desc").onSnapshot(docSnapshot => {
             this.setState({ orders: [] }); // Restart state
     
             docSnapshot.forEach(order => {
@@ -163,13 +163,14 @@ export class MainContextProvider extends PureComponent {
         });
     }
 
-    updateBusiness = (active, name) => {
+    updateBusiness = (active, name, photoURL) => {
         const { uid } = this.state;
         const db = firebase.firestore();
 
         db.collection('business').doc(uid).update({
             active,
-            name
+            name,
+            photoURL
         })
         .then(() => {
             Notification.success({
@@ -228,21 +229,45 @@ export class MainContextProvider extends PureComponent {
         });
     }
 
-    addNewProduct = (category, name, price, photoURL, description ) => {
+    addNewProduct = (category, name, price, photoURL, description, toggleShowAddProductDrawer) => {
         const { uid } = this.state;
         const db = firebase.firestore();
+        const storageRef = firebase.storage().ref();
 
-        db.collection('business').doc(uid).collection(category).add({
-            name,
-            price,
-            photoURL,
-            description
-        })
-        .then(docRef => {
-            Notification.success({
-                title: "Perfecto",
-                description: `Acabas de agregar un nuevo producto: ${name}`
-            });
+        const newProductRef = db.collection('business').doc(uid).collection(category).doc();
+
+        Notification.info({
+            title: "Espera",
+            description: "Subiendo imágen."
+        });
+
+        // Upload the selected image to firebase and then get the URL
+        const uploadProductImage = storageRef.child(`business/${uid}/${category}/${newProductRef.id}`)
+            .putString(photoURL, 'data_url');
+                    
+        uploadProductImage.then(snapshot => {
+            snapshot.ref.getDownloadURL().then(downloadURL => {
+                newProductRef.set({
+                    name,
+                    price,
+                    photoURL: downloadURL,
+                    description
+                })
+                .then(docRef => {
+                    Notification.success({
+                        title: "Perfecto",
+                        description: `Acabas de agregar un nuevo producto: ${name}`
+                    });
+
+                    toggleShowAddProductDrawer();
+                })
+                .catch(error => {
+                    Notification.error({
+                        title: "Ocurrió un error",
+                        description: error
+                    });
+                }); 
+            })
         })
         .catch(error => {
             Notification.error({

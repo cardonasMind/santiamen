@@ -96,7 +96,7 @@ export default class extends PureComponent {
         const businessKey = this.props.query.negocio;
         const business = this.context.business[this.context.businessKeys.indexOf(businessKey)];
 
-        const { resetOrderList, uid } = this.context;
+        const { resetOrderList, uid, active } = this.context;
 
         const isBusinessOwner = uid === businessKey;
 
@@ -119,21 +119,24 @@ export default class extends PureComponent {
                     />
 
                     {
-                        isBusinessOwner && <EditBusiness />
+                        isBusinessOwner && active !== null && <EditBusiness />
                     }
                 </header>
 
                 <main>
                     {
-                        !isBusinessOwner &&
-                            categories.length > 0 &&
-                                categories.map((category, index) => 
-                                    category.visible ?
-                                        category.products.length > 0 &&
-                                            <Category key={index} title={category.title} products={category.products} />     
-                                    :
-                                        <Category key={index} />
-                                )
+                        !isBusinessOwner && categories.length > 0 &&
+                            categories.map((category, index) => {
+                                const { visible, title, products } = category;
+
+                                if(visible !== undefined) {
+                                    if(visible && products.length > 0) 
+                                        return <Category key={index} title={title} products={products} />
+                                    else 
+                                        return null
+                                } else 
+                                    return <Category key={index} />
+                            })
                     }
 
                     {

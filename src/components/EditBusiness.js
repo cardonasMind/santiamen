@@ -1,8 +1,44 @@
 import { PureComponent } from "react";
 
-import { Button, Icon, Drawer, Form, FormGroup, Toggle, Input, Uploader, Dropdown } from "rsuite";
+import { Notification, Button, Icon, Drawer, Form, FormGroup, Toggle, Input, Uploader, Dropdown } from "rsuite";
 
 import { MainContext } from "../config/MainContext";
+
+import firebase from "../config/firebase";
+
+
+
+
+
+//              THEN DELETE THIS
+class PreviewAndGetImage extends PureComponent {
+    handleUpload = e => {
+        const file = e.blobFile;
+        const reader = new FileReader();
+        
+        // Set the image once loaded into file reader
+        reader.readAsDataURL(file);
+
+        reader.onload = e => {
+            this.props.handleImage(e.target.result);
+        }
+    }
+
+    render() {
+        return(
+            <Uploader action="" draggable onUpload={this.handleUpload}>
+                {this.props.children}
+            </Uploader>
+        )
+    }
+}
+
+
+
+
+
+
+
 
 export default class extends PureComponent {
     static contextType = MainContext;
@@ -12,7 +48,7 @@ export default class extends PureComponent {
 
         active: this.context.active,
         name: this.context.name,
-        photoURL: "",
+        photoURL: this.context.photoURL,
         backgroundURL: ""
     }
 
@@ -23,16 +59,53 @@ export default class extends PureComponent {
 
     handleActive = active => this.setState({ active });
 
-    updateBusiness = () => {
-        const { active, name } = this.state;
-        const { updateBusiness } = this.context;
+    handlePhotoURL = photoURL => this.setState({ photoURL });
 
-        updateBusiness(active, name);
-        this.toggleShowEditBusinessDrawer();
+    updateBusiness = () => {
+        const { active, name, photoURL } = this.state;
+        const { uid, updateBusiness } = this.context;
+
+        if(name !== "") {
+            // photoURL haven´t change
+            if(photoURL == this.context.photoURL) {
+                updateBusiness(active, name, photoURL);
+                this.toggleShowEditBusinessDrawer();
+
+            } else {
+                const storageRef = firebase.storage().ref();
+
+                Notification.info({
+                    title: "Espera",
+                    description: "Subiendo imágen."
+                });
+    
+                // Upload the selected image to firebase and then get the URL
+                const uploadBusinessLogo = storageRef.child(`business/${uid}/logo`)
+                    .putString(photoURL, 'data_url');
+                        
+                uploadBusinessLogo.then(snapshot => {
+                    snapshot.ref.getDownloadURL().then(downloadURL => {
+                        updateBusiness(active, name, downloadURL);
+                        this.toggleShowEditBusinessDrawer();
+                    })
+                })
+                .catch(error => {
+                    Notification.error({
+                        title: "Ocurrió un error",
+                        description: error
+                    });
+                });
+            }
+        } else {
+            Notification.info({
+                title: "Espera",
+                description: "Falta el nombre de tu negocio."
+            });
+        }
     }
 
     render() {
-        const { showEditBusinessDrawer, active, name } = this.state;
+        const { showEditBusinessDrawer, active, name, photoURL } = this.state;
 
         return (
             <div id="edit-business">
@@ -60,9 +133,9 @@ export default class extends PureComponent {
                                 <div id="logo-uploader">
                                     <div id="logo-preview" />
                                     <div>
-                                        <Uploader action="" draggable>
+                                        <PreviewAndGetImage handleImage={this.handlePhotoURL} >
                                             <p>Seleccionar logo</p>
-                                        </Uploader>
+                                        </PreviewAndGetImage>
                                     </div>
                                 </div>
                             </FormGroup>
@@ -70,21 +143,22 @@ export default class extends PureComponent {
                             <FormGroup>
                                 <h2>Imágen de fondo</h2>
                                 <div id="background-uploader">
+                                    <Dropdown title="Seleccionar">
+                                        <Dropdown.Item>New File</Dropdown.Item>
+                                        <Dropdown.Item>New File with Current Profile</Dropdown.Item>
+                                        <Dropdown.Item>Download As...</Dropdown.Item>
+                                        <Dropdown.Item>Export PDF</Dropdown.Item>
+                                        <Dropdown.Item>Export HTML</Dropdown.Item>
+                                        <Dropdown.Item>Settings</Dropdown.Item>
+                                        <Dropdown.Item>About</Dropdown.Item>
+                                    </Dropdown>
+
                                     <div id="background-preview" />
+                                    
                                     <Uploader action="" draggable>
                                         <p>Seleccionar imágen de fondo</p>
                                     </Uploader>
                                 </div>
-                                <h3>Preseleccionados</h3>
-                                <Dropdown title="Seleccionar">
-                                    <Dropdown.Item>New File</Dropdown.Item>
-                                    <Dropdown.Item>New File with Current Profile</Dropdown.Item>
-                                    <Dropdown.Item>Download As...</Dropdown.Item>
-                                    <Dropdown.Item>Export PDF</Dropdown.Item>
-                                    <Dropdown.Item>Export HTML</Dropdown.Item>
-                                    <Dropdown.Item>Settings</Dropdown.Item>
-                                    <Dropdown.Item>About</Dropdown.Item>
-                                </Dropdown>
                             </FormGroup>
 
                             <FormGroup>
@@ -114,10 +188,12 @@ export default class extends PureComponent {
                         display: grid;
                         grid-template-columns: auto 1fr;
                         grid-gap: .6rem;
+                        overflow-x: auto;
+                        position: relative;
                     }
 
                     #logo-preview {
-                        //background-image: url(${photo ? photo : ""});
+                        background-image: url(${photoURL ? photoURL : ""});
                         background-size: cover;
                         background-position: center;
                         width: 80px;
@@ -128,7 +204,10 @@ export default class extends PureComponent {
                     }
 
                     #background-uploader {
-
+                        display: grid;
+                        grid-gap: .6rem;
+                        overflow-x: auto;
+                        position: relative;
                     }
 
                     #background-preview {
@@ -136,7 +215,7 @@ export default class extends PureComponent {
                         height: 140px;
                         border: 1px solid rgb(0, 0, 0, .2);
                         background-color: rgba(0, 0, 0, .2);
-                    }
+                    }¿
 
                     #business-buttons {
                         display: grid;

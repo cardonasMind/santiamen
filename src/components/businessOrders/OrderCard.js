@@ -36,7 +36,7 @@ export default class extends PureComponent {
 
     render() {
         const { showOrderDetailsDrawer, mapRef } = this.state;
-        const { date, name, order } = this.props;
+        const { date, name, details, order } = this.props;
 
         return(
             <div className="orderCard">
@@ -50,12 +50,12 @@ export default class extends PureComponent {
     
                 <Drawer placement="right" full show={showOrderDetailsDrawer} onEnter={this.renderMap} onHide={this.toggleShowOrderDetailsDrawer} >
                     <Drawer.Header>
-                        <Drawer.Title></Drawer.Title>
-                    </Drawer.Header>
-                    <Drawer.Body>
                         <p>{date}</p>
                         <h2>Pedido de: {name}</h2>
+                    </Drawer.Header>
+                    <Drawer.Body>
                         <div ref={mapRef} id="mapId"></div>
+                        * {details}
 
                         <div id="order-products">
                             {
@@ -89,13 +89,12 @@ export default class extends PureComponent {
 
                     #mapId {
                         height: 240px;
-                        margin: 1rem 0;
                     }
 
                     #order-products {
                         display: grid;
                         grid-gap: 1rem;
-                        margin-bottom: 1rem;
+                        margin: 1rem 0;
                     }
                 `}</style>
             </div>
