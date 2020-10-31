@@ -90,7 +90,7 @@ export default class extends PureComponent {
         const { phoneScreen, phoneNumber, phoneCode } = this.state;
         return(
             <Fragment>
-                <h2 onClick={this.toggleShowLoginDrawer}>Acceder a tu negocio</h2>
+                <h2 onClick={this.toggleShowLoginDrawer}>Acceder</h2>
                 
                 <Drawer full placement="bottom" show={this.state.showLoginDrawer} onHide={this.toggleShowLoginDrawer}>
                     <Drawer.Header><h1>Accede a tu negocio</h1></Drawer.Header>

@@ -59,7 +59,7 @@ export default class extends PureComponent {
 
                         <div id="order-products">
                             {
-                                order.map(product => <OrderProduct {...product} />)
+                                order.map(product => <OrderProduct key={product.id} {...product} />)
                             }
                         </div>
 

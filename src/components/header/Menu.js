@@ -19,7 +19,7 @@ export default class extends PureComponent {
     toggleShowMenu = () => this.setState(prevState => ({ showMenu: !prevState.showMenu }));
 
     render() {
-        const { uid, name, registerBusiness } = this.context;
+        const { userIsInDb, registerBusiness } = this.context;
 
         return(
             <span>
@@ -39,7 +39,7 @@ export default class extends PureComponent {
                 </Drawer>
 
 
-                <Register uid={uid} name={name} registerBusiness={registerBusiness} />
+                <Register userIsInDb={userIsInDb} registerBusiness={registerBusiness} />
 
                 <style jsx>{`
                     #menu-body {

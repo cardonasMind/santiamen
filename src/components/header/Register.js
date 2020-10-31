@@ -35,6 +35,9 @@ export default class extends PureComponent {
     render() {
         const { name, category, photoURL } = this.state;
 
+        // This checks if userIsInDb is null, true or false
+        const { userIsInDb } = this.props;
+
         return(
             <div id="register-container">
                 <Form>
@@ -74,22 +77,23 @@ export default class extends PureComponent {
                     #register-container {
                         padding: 2rem;
                         position: fixed;
-                        top: 0;
+                        top: ${userIsInDb !== null ? userIsInDb ? "100vh" : "0" : "100vh"};
                         right: 0;
                         bottom: 0;
-                        left: ${this.props.uid !== "" && this.props.name === "" ? "0" : "100vh"};
+                        left: 0;
                         transition: .2s;
-                        z-index: 999;
+                        z-index: 10000;
                         background-color: white;
                         background-image: url("/images/auth-background.jpg");
                         background-size: cover;
+                        overflow-x: auto;
                     }
 
                     #register-container::after {
                         content: "";
                         background: linear-gradient(rgba(0, 0, 0, .1), rgb(0, 0, 0, .8));
-                        position: absolute;
-                        top: 0;
+                        position: fixed;
+                        top: ${userIsInDb !== null ? userIsInDb ? "100vh" : "0" : "100vh"};
                         right: 0;
                         bottom: 0;
                         left: 0;
@@ -116,7 +120,7 @@ export default class extends PureComponent {
                         height: 80px;
                         border-radius: .6rem;
                         border: 1px solid rgb(0, 0, 0, .2);
-                        background-color: rgba(0, 0, 0, .2);
+                        background-color: rgba(255, 255, 255, .2);
                     }
                 `}</style>
             </div>

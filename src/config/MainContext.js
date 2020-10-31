@@ -11,6 +11,7 @@ export class MainContextProvider extends PureComponent {
         super();
 
         this.state = {
+            userIsInDb: null,
             uid: "",
             name: "",
             photoURL: "",
@@ -94,9 +95,11 @@ export class MainContextProvider extends PureComponent {
                 const userDataFromDb = doc.data();
                 const { active, name, photoURL, backgroundURL } = userDataFromDb;
 
-                this.setState({ active, name, photoURL, backgroundURL });
+                this.setState({ active, name, photoURL, backgroundURL, userIsInDb: true });
 
                 this.getBusinessOrders(uid);
+            } else {
+                this.setState({ userIsInDb: false });
             }
         },
         error => {
@@ -130,17 +133,28 @@ export class MainContextProvider extends PureComponent {
                     backgroundURL: ""
                 })
                 .then(docRef => {
+                    // Adding the 6 categories to the business
+                    for(let i = 1; i < 7; i++) {
+                        db.doc(`business/${uid}/category${i}/info`).set({
+                            visible: false,
+                            title: `Categoría ${i}`
+                        })
+                        .catch(error => Notification.error({
+                            title: "Ocurrió un error",
+                            description: error
+                        }));
+                    }
+
                     Notification.success({
                         title: "Perfecto",
                         description: "¡Acabas de registrar tu negocio!"
                     });
                 })
-                .catch(error => {
-                    Notification.error({
+                .catch(error => Notification.error({
                         title: "Ocurrió un error",
                         description: error
-                    });
-                }); 
+                    })
+                ); 
             })
         })
         .catch(error => {
