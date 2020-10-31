@@ -17,6 +17,7 @@ export class MainContextProvider extends PureComponent {
             backgroundURL: "",
             active: null,
             orders: [],
+            registerBusiness: this.registerBusiness,
             handleLogout: this.handleLogout,
             updateBusiness: this.updateBusiness,
             processOrder: this.processOrder,
@@ -96,9 +97,6 @@ export class MainContextProvider extends PureComponent {
                 this.setState({ active, name, photoURL, backgroundURL });
 
                 this.getBusinessOrders(uid);
-            } else {
-                // Fix it by making possible register
-                console.log("User isn´t in DB")
             }
         },
         error => {
@@ -107,6 +105,50 @@ export class MainContextProvider extends PureComponent {
                 description: error
             });
         })
+    }
+
+    registerBusiness = (name, category, photoURL) => {
+        const { uid } = this.state;
+        const db = firebase.firestore();
+        const storageRef = firebase.storage().ref();
+
+        const uploadBusinessLogo = storageRef.child(`business/${uid}/logo`)
+            .putString(photoURL, 'data_url');
+
+        Notification.info({
+            title: "Espera",
+            description: "Subiendo imágen."
+        });
+
+        uploadBusinessLogo.then(snapshot => {
+            snapshot.ref.getDownloadURL().then(downloadURL => {
+                db.collection('business').doc(uid).set({
+                    active: false,
+                    name,
+                    category,
+                    photoURL: downloadURL,
+                    backgroundURL: ""
+                })
+                .then(docRef => {
+                    Notification.success({
+                        title: "Perfecto",
+                        description: "¡Acabas de registrar tu negocio!"
+                    });
+                })
+                .catch(error => {
+                    Notification.error({
+                        title: "Ocurrió un error",
+                        description: error
+                    });
+                }); 
+            })
+        })
+        .catch(error => {
+            Notification.error({
+                title: "Ocurrió un error",
+                description: error
+            });
+        });
     }
 
     handleLogout = () => {

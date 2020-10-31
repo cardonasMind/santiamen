@@ -90,9 +90,9 @@ export default class extends PureComponent {
         const { phoneScreen, phoneNumber, phoneCode } = this.state;
         return(
             <Fragment>
-                <h2 onClick={this.toggleShowLoginDrawer}>Acceder</h2>
+                <h2 onClick={this.toggleShowLoginDrawer}>Acceder a tu negocio</h2>
                 
-                <Drawer full placement={"bottom"} show={this.state.showLoginDrawer} onHide={this.toggleShowLoginDrawer}>
+                <Drawer full placement="bottom" show={this.state.showLoginDrawer} onHide={this.toggleShowLoginDrawer}>
                     <Drawer.Header><h1>Accede a tu negocio</h1></Drawer.Header>
                     <Drawer.Body>
                         <div id="login-form">
@@ -139,6 +139,8 @@ export default class extends PureComponent {
                                     </Form>
                             }
                         </div>
+                        <br />
+                        <p>* Si aún no te has registrado, luego de acceder podrás hacerlo.</p>
                     </Drawer.Body>
                 </Drawer>
 
@@ -146,13 +148,15 @@ export default class extends PureComponent {
 
                 <style jsx>{`
                     #login-form {
-                        text-align: center;
+                        background-image: url("/images/auth-background.jpg");
+                        background-size: cover;
+                        color: white;
+                        padding: 6rem 2rem;
                     }
 
                     h2 {
                         margin-bottom: .4rem;
                     }
-                
                 `}</style>
             </Fragment>
         )

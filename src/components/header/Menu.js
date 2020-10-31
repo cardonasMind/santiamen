@@ -4,9 +4,14 @@ import Link from "next/link";
 
 import { Icon, Drawer } from "rsuite";
 
+import { MainContext } from "../../config/MainContext";
+
 import Account from "./Account";
+import Register from "./Register";
 
 export default class extends PureComponent {
+    static contextType = MainContext;
+
     state = {
         showMenu: false
     }
@@ -14,11 +19,13 @@ export default class extends PureComponent {
     toggleShowMenu = () => this.setState(prevState => ({ showMenu: !prevState.showMenu }));
 
     render() {
+        const { uid, name, registerBusiness } = this.context;
+
         return(
             <span>
                 <Icon icon="bars" size="2x" onClick={this.toggleShowMenu} />
 
-                <Drawer full placement={"right"} show={this.state.showMenu} onHide={this.toggleShowMenu}>
+                <Drawer full placement="right" show={this.state.showMenu} onHide={this.toggleShowMenu}>
                     <Drawer.Header></Drawer.Header>
                     <Drawer.Body>
                         <div id="menu-body">
@@ -30,6 +37,9 @@ export default class extends PureComponent {
                         </div>
                     </Drawer.Body>
                 </Drawer>
+
+
+                <Register uid={uid} name={name} registerBusiness={registerBusiness} />
 
                 <style jsx>{`
                     #menu-body {

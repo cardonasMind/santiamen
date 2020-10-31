@@ -4,7 +4,6 @@ import Link from "next/link";
 
 import { MainContext } from "../../config/MainContext";
 
-import Register from "./Register";
 import Login from "./Login";
 
 import { Button } from "rsuite";
@@ -34,7 +33,6 @@ const Account = () => {
                         </Fragment>
                     :
                         <Fragment>
-                            <Register />
                             <Login />
                         </Fragment>
                 }
