@@ -4,9 +4,9 @@ import { MainContext } from "../config/MainContext";
 
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
-import { Uploader, Button, Icon, Drawer, Form, FormGroup, Input, InputNumber, Toggle, Notification, Modal } from "rsuite";
+import { Button, Icon, Drawer, Form, FormGroup, Input, InputNumber, Toggle, Notification, Modal } from "rsuite";
 
-import firebase from "../config/firebase";
+import PreviewAndGetImage from "./PreviewAndGetImage";
 
 import Product from "./Product";
 
@@ -84,30 +84,6 @@ class UpdateCategoryForm extends PureComponent {
     }
 }
 
-
-//          THEN DELETE OR CHANGE THIS TO MAKE IT MORE "COMPONENT"
-class PreviewAndGetImage extends PureComponent {
-    handleUpload = e => {
-        const file = e.blobFile;
-        const reader = new FileReader();
-        
-        // Set the image once loaded into file reader
-        reader.readAsDataURL(file);
-
-        reader.onload = e => {
-            this.props.handleImage(e.target.result);
-        }
-    }
-
-    render() {
-        return(
-            <Uploader action="" draggable onUpload={this.handleUpload}>
-                {this.props.children}
-            </Uploader>
-        )
-    }
-}
-
 class AddNewProductForm extends PureComponent {
     state = {
         name: "",
@@ -167,7 +143,7 @@ class AddNewProductForm extends PureComponent {
                     <h2>Imágen</h2>
                     <div id="product-image">
                         <div id="product-image-preview" />
-                        <PreviewAndGetImage handleImage={this.handlePhotoURL} >
+                        <PreviewAndGetImage handleImage={this.handlePhotoURL} toWidth={300}>
                             <p>Seleccionar imágen</p>
                         </PreviewAndGetImage>
                     </div>
@@ -431,7 +407,7 @@ export default class extends PureComponent {
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        margin-top: auto;
+                        margin-top: ${products.length > 0 ? "auto" : "initial"};
                     }
 
                     .addNewProductContainer .addNewProduct {

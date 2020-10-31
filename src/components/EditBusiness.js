@@ -1,44 +1,12 @@
 import { PureComponent } from "react";
 
-import { Notification, Button, Icon, Drawer, Form, FormGroup, Toggle, Input, Uploader, Dropdown } from "rsuite";
+import { Notification, Button, Icon, Drawer, Form, FormGroup, Toggle, Input } from "rsuite";
 
 import { MainContext } from "../config/MainContext";
 
 import firebase from "../config/firebase";
 
-
-
-
-
-//              THEN DELETE THIS
-class PreviewAndGetImage extends PureComponent {
-    handleUpload = e => {
-        const file = e.blobFile;
-        const reader = new FileReader();
-        
-        // Set the image once loaded into file reader
-        reader.readAsDataURL(file);
-
-        reader.onload = e => {
-            this.props.handleImage(e.target.result);
-        }
-    }
-
-    render() {
-        return(
-            <Uploader action="" draggable onUpload={this.handleUpload}>
-                {this.props.children}
-            </Uploader>
-        )
-    }
-}
-
-
-
-
-
-
-
+import PreviewAndGetImage from "./PreviewAndGetImage";
 
 export default class extends PureComponent {
     static contextType = MainContext;
@@ -49,7 +17,7 @@ export default class extends PureComponent {
         active: this.context.active,
         name: this.context.name,
         photoURL: this.context.photoURL,
-        backgroundURL: ""
+        backgroundURL: this.context.backgroundURL
     }
 
     toggleShowEditBusinessDrawer = () => 
@@ -61,19 +29,55 @@ export default class extends PureComponent {
 
     handlePhotoURL = photoURL => this.setState({ photoURL });
 
+    handleBackgroundURL = backgroundURL => this.setState({ backgroundURL });
+
     updateBusiness = () => {
-        const { active, name, photoURL } = this.state;
+        const { active, name, photoURL, backgroundURL } = this.state;
         const { uid, updateBusiness } = this.context;
 
         if(name !== "") {
-            // photoURL haven´t change
-            if(photoURL == this.context.photoURL) {
-                updateBusiness(active, name, photoURL);
-                this.toggleShowEditBusinessDrawer();
+            const storageRef = firebase.storage().ref();
 
-            } else {
-                const storageRef = firebase.storage().ref();
+            if(photoURL !== this.context.photoURL && backgroundURL !== this.context.backgroundURL) {
+                 // User have changed photoURL and backgroundURl
+                Notification.info({
+                    title: "Espera",
+                    description: "Subiendo imágenes."
+                });
 
+                // Upload the selected images to firebase and then get the URL
+                const uploadBusinessLogo = storageRef.child(`business/${uid}/logo`)
+                    .putString(photoURL, 'data_url');
+
+                const uploadBusinessBackground = storageRef.child(`business/${uid}/background`)
+                    .putString(backgroundURL, 'data_url');
+
+                // First upload photoURL and then backgroundURL
+                uploadBusinessLogo.then(snapshot => {
+                    snapshot.ref.getDownloadURL().then(downloadPhotoURL => {
+                        uploadBusinessBackground.then(snapshot => {
+                            snapshot.ref.getDownloadURL().then(downloadBackgroundURL => {
+                                updateBusiness(active, name, downloadPhotoURL, downloadBackgroundURL);
+                                this.toggleShowEditBusinessDrawer();
+                            })
+                        })
+                        .catch(error => {
+                            Notification.error({
+                                title: "Ocurrió un error",
+                                description: error
+                            });
+                        });
+                    })
+                })
+                .catch(error => {
+                    Notification.error({
+                        title: "Ocurrió un error",
+                        description: error
+                    });
+                });
+
+            } else if(photoURL !== this.context.photoURL) {
+                // User only have changed photoURL
                 Notification.info({
                     title: "Espera",
                     description: "Subiendo imágen."
@@ -85,7 +89,7 @@ export default class extends PureComponent {
                         
                 uploadBusinessLogo.then(snapshot => {
                     snapshot.ref.getDownloadURL().then(downloadURL => {
-                        updateBusiness(active, name, downloadURL);
+                        updateBusiness(active, name, downloadURL, backgroundURL);
                         this.toggleShowEditBusinessDrawer();
                     })
                 })
@@ -95,6 +99,35 @@ export default class extends PureComponent {
                         description: error
                     });
                 });
+
+            } else if(backgroundURL !== this.context.backgroundURL) {
+                // User only have changed backgroundURL
+                Notification.info({
+                    title: "Espera",
+                    description: "Subiendo imágen de fondo."
+                });
+    
+                // Upload the selected image to firebase and then get the URL
+                const uploadBusinessBackground = storageRef.child(`business/${uid}/background`)
+                    .putString(backgroundURL, 'data_url');
+                        
+                uploadBusinessBackground.then(snapshot => {
+                    snapshot.ref.getDownloadURL().then(downloadURL => {
+                        updateBusiness(active, name, photoURL, downloadURL);
+                        this.toggleShowEditBusinessDrawer();
+                    })
+                })
+                .catch(error => {
+                    Notification.error({
+                        title: "Ocurrió un error",
+                        description: error
+                    });
+                });
+
+            } else {
+                // User haven´t changed images
+                updateBusiness(active, name, photoURL, backgroundURL);
+                this.toggleShowEditBusinessDrawer();
             }
         } else {
             Notification.info({
@@ -105,7 +138,7 @@ export default class extends PureComponent {
     }
 
     render() {
-        const { showEditBusinessDrawer, active, name, photoURL } = this.state;
+        const { showEditBusinessDrawer, active, name, photoURL, backgroundURL } = this.state;
 
         return (
             <div id="edit-business">
@@ -132,32 +165,19 @@ export default class extends PureComponent {
                                 <h2>Logo</h2>
                                 <div id="logo-uploader">
                                     <div id="logo-preview" />
-                                    <div>
-                                        <PreviewAndGetImage handleImage={this.handlePhotoURL} >
-                                            <p>Seleccionar logo</p>
-                                        </PreviewAndGetImage>
-                                    </div>
+                                    <PreviewAndGetImage handleImage={this.handlePhotoURL} toWidth={80}>
+                                        <p>Seleccionar logo</p>
+                                    </PreviewAndGetImage>
                                 </div>
                             </FormGroup>
 
                             <FormGroup>
                                 <h2>Imágen de fondo</h2>
                                 <div id="background-uploader">
-                                    <Dropdown title="Seleccionar">
-                                        <Dropdown.Item>New File</Dropdown.Item>
-                                        <Dropdown.Item>New File with Current Profile</Dropdown.Item>
-                                        <Dropdown.Item>Download As...</Dropdown.Item>
-                                        <Dropdown.Item>Export PDF</Dropdown.Item>
-                                        <Dropdown.Item>Export HTML</Dropdown.Item>
-                                        <Dropdown.Item>Settings</Dropdown.Item>
-                                        <Dropdown.Item>About</Dropdown.Item>
-                                    </Dropdown>
-
                                     <div id="background-preview" />
-                                    
-                                    <Uploader action="" draggable>
+                                    <PreviewAndGetImage handleImage={this.handleBackgroundURL} toWidth={600}>
                                         <p>Seleccionar imágen de fondo</p>
-                                    </Uploader>
+                                    </PreviewAndGetImage>
                                 </div>
                             </FormGroup>
 
@@ -215,7 +235,10 @@ export default class extends PureComponent {
                         height: 140px;
                         border: 1px solid rgb(0, 0, 0, .2);
                         background-color: rgba(0, 0, 0, .2);
-                    }¿
+                        background-image: url(${backgroundURL ? backgroundURL : ""});
+                        background-size: cover;
+                        background-position: center;
+                    }
 
                     #business-buttons {
                         display: grid;

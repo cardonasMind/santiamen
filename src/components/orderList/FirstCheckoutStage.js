@@ -49,8 +49,6 @@ export default class extends PureComponent {
         this.setState({ marker: newMarker });
 
         map.addLayer(newMarker);
-
-        //map.setView([lat, lng], 16);
     }
 
     handleChange = (value, e) => this.setState({ [e.target.name]: e.target.value });

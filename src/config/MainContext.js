@@ -14,6 +14,7 @@ export class MainContextProvider extends PureComponent {
             uid: "",
             name: "",
             photoURL: "",
+            backgroundURL: "",
             active: null,
             orders: [],
             handleLogout: this.handleLogout,
@@ -81,46 +82,31 @@ export class MainContextProvider extends PureComponent {
 
 
 
-    /*              HANDLE ACCOUNT                */
     userAccountFromDB = uid => {
         const db = firebase.firestore();
 
         // For the moment only will be business accounts
         const userInDbRef = db.collection("business").doc(uid);
 
-        userInDbRef.get().then(doc => {
-            if (doc.exists) {
+        userInDbRef.onSnapshot(doc => {
+            if(doc.exists) {
                 const userDataFromDb = doc.data();
-                const { name, photoURL, active } = userDataFromDb;
+                const { active, name, photoURL, backgroundURL } = userDataFromDb;
 
-                this.setState({ name, photoURL, active });
+                this.setState({ active, name, photoURL, backgroundURL });
 
                 this.getBusinessOrders(uid);
             } else {
-                // If user isn´t in the DB, add it XD
-                /*db.collection("users").doc(uid).set({
-                    accountType: "normal",
-                    displayName: this.state.displayName,
-                    photoURL: this.state.photoURL
-                })
-                .then(() => {
-        this.setState({ accountType: "normal" });
-                    console.log("User is now in the DB :o");
-                })
-                .catch(error => {
-                    Notification["error"]({
-                        title: "Ocurrió un error :(",
-                        description: error.message
-                    });
-                });*/
+                // Fix it by making possible register
+                console.log("User isn´t in DB")
             }
-        })
-        .catch(error => {
+        },
+        error => {
             Notification.error({
                 title: "Ocurrió un error",
                 description: error
             });
-        });
+        })
     }
 
     handleLogout = () => {
@@ -163,14 +149,15 @@ export class MainContextProvider extends PureComponent {
         });
     }
 
-    updateBusiness = (active, name, photoURL) => {
+    updateBusiness = (active, name, photoURL, backgroundURL) => {
         const { uid } = this.state;
         const db = firebase.firestore();
 
         db.collection('business').doc(uid).update({
             active,
             name,
-            photoURL
+            photoURL,
+            backgroundURL
         })
         .then(() => {
             Notification.success({
