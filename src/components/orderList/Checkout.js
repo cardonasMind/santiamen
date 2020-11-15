@@ -53,6 +53,8 @@ export default class extends PureComponent {
                         left: ${showFirstCheckoutStage || showSecondCheckoutStage ? "0" : "100vw"};
                         background: white;
                         transition: .1s;
+                        
+                        overflow-x: auto;
                     }
                 
                 `}</style>

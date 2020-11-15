@@ -127,19 +127,16 @@ export default class extends PureComponent {
                 <style jsx>{`
                     #first-checkout-stage {
                         background: url("/images/hablar-background.jpg");
-                        background-size: cover;
-                        height: 100%;
                         color: white;
                         z-index: -1;
                         position: relative;
                         padding: 2rem 4rem 10rem 4rem;
-                        overflow-x: auto;
                     }
 
                     #first-checkout-stage::after {
                         content: "";
                         background: linear-gradient(rgba(0, 0, 0, .2), rgb(0, 0, 0, .6));
-                        position: fixed;
+                        position: absolute;
                         top: 0;
                         right: 0;
                         bottom: 0;

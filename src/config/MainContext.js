@@ -229,25 +229,89 @@ export class MainContextProvider extends PureComponent {
         });
     }
 
-    processOrder = orderId => {
+    processOrder = (orderId, stage, time) => {
         const { uid } = this.state;
         const db = firebase.firestore();
 
-        db.collection('business').doc(uid).collection('orders').doc(orderId).update({
-            sent: true
-        })
-        .then(() => {
-            Notification.success({
-                title: "Listo",
-                description: `Has enviado la orden ${orderId}`
+        const orderRef = db.collection('business').doc(uid).collection('orders').doc(orderId);
+
+        if(stage === 0) {
+            orderRef.update({
+                stage: stage+1,
+                time
+            })
+            .catch(error => {
+                Notification.error({
+                    title: "Ocurrió un error",
+                    description: error
+                });
             });
-        })
-        .catch(error => {
-            Notification.error({
-                title: "Ocurrió un error",
-                description: error
+        } else if(stage === 2) {
+            // Order has been delivered 
+            orderRef.update({
+                stage: stage+1,
+                sent: true
+            })
+            .then(() => {
+                Notification.success({
+                    title: "Perfecto",
+                    description: `La orden ${orderId} ha sido recibida por el cliente.`
+                });
+            })
+            .catch(error => {
+                Notification.error({
+                    title: "Ocurrió un error",
+                    description: error
+                });
             });
-        });
+        } else {
+            orderRef.update({
+                stage: stage+1
+            })
+            .catch(error => {
+                Notification.error({
+                    title: "Ocurrió un error",
+                    description: error
+                });
+            });
+        }
+
+        
+
+
+        /*if(stage !== 0) {
+            orderRef.update({
+                stage: true
+            })
+            .then(() => {
+                Notification.success({
+                    title: "Listo",
+                    description: `Has enviado la orden ${orderId}`
+                });
+            })
+            .catch(error => {
+                Notification.error({
+                    title: "Ocurrió un error",
+                    description: error
+                });
+            });
+        } else {
+            orderRef.update({
+                stage: true
+            })
+            .then(() => {
+                Notification.success({
+                    title: "Listo",
+                    description: `Has enviado la orden ${orderId}`
+                });
+            })
+            .catch(error => {
+                Notification.error({
+                    title: "Ocurrió un error",
+                    description: error
+                });
+            });
+        }*/
     }
 
     updateCategory = (category, title, visible) => {
@@ -389,8 +453,6 @@ export class MainContextProvider extends PureComponent {
     };
 
     sendOrder = (name, details, businessKey, lat, lng, secondCheckoutStage) => {
-        this.setState({ orderInfo: { name, details, lat, lng } });
-    
         const { orderList } = this.state;
 
         const db = firebase.firestore();
@@ -405,6 +467,8 @@ export class MainContextProvider extends PureComponent {
             name,
             details,
             sent: false,
+            stage: 0,
+            time: "",
             lat,
             lng,
             order: orderList
@@ -415,6 +479,8 @@ export class MainContextProvider extends PureComponent {
               title: "Listo",
               description: "Tu pedido ha sido recibido."
             });
+
+            this.setState({ orderInfo: { ref: docRef, name, details, lat, lng } });
     
             secondCheckoutStage();
         })
