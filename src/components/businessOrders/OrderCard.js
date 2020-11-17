@@ -4,7 +4,6 @@ import { Icon, Drawer, Button } from "rsuite";
 
 import OrderProduct from "./OrderProduct";
 import OrderStage from "../orderList/OrderStage";
-import { render } from "less";
 
 const ReducedOrderStage = ({ stage }) => {
     return(
@@ -25,6 +24,36 @@ const ReducedOrderStage = ({ stage }) => {
                 
                 .reducedOrderStage .orderStage .orderStageItem p {
                     font-size: .8rem;
+                }
+            `}</style>
+        </div>
+    )
+}
+
+const OrderStageDeMientras = ({ stage }) => {
+    return(
+        <div id="order-stage-de-mientras">
+            {
+                stage == 0 &&
+                    <p><img width="18px" src="/icons/confirmed.svg" /> Esperando confirmación.</p>
+            }
+
+            {
+                stage == 1 &&
+                    <p><img width="18px" src="/icons/cooking.svg" /> Preparando pedido.</p>
+            }
+
+            {
+                stage == 2 &&
+                    <p><img width="18px" src="/icons/delivering.svg" /> Enviando pedido.</p>
+            }
+
+            <style jsx>{`
+                #order-stage-de-mientras {
+                    background: ${stage == 0 ? "rgba(0, 0, 0, .3)" : stage == 1 ? "rgb(76, 175, 80, .6)" : "rgba(0, 188, 212, .6)"};
+                    padding: .4rem;
+                    margin: 0 0 -1rem -1rem;
+                    color: white;
                 }
             `}</style>
         </div>
@@ -98,11 +127,12 @@ export default class extends PureComponent {
                 <div className="order">
                     <p>{date}</p>
                     <h3>{name}</h3>
+
+                    <OrderStageDeMientras stage={stage} />
                 </div>
                 <div className="orderDetails" onClick={this.toggleShowOrderDetailsDrawer}>
                     <Icon icon="angle-right" size="2x" />
                 </div>
-                <ReducedOrderStage stage={stage} />
     
                 <Drawer placement="right" full show={showOrderDetailsDrawer} onEnter={this.renderMap} onHide={this.toggleShowOrderDetailsDrawer} >
                     <Drawer.Header>

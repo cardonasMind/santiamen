@@ -98,7 +98,7 @@ export default class extends PureComponent {
                     </div>
 
                     <div ref={items[3]} className="orderStageItem">
-                        <img src="/icons/delivered.svg" />
+                        <img src="/icons/delivered.svg"/>
                         <p>Entregado</p>
                     </div>
                 </div>
