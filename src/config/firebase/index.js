@@ -1,5 +1,5 @@
 import firebase from "firebase/app";
-import firebaseConfig from "./firebaseConfig";
+import firebaseConfig from "./config";
 
 import "firebase/firestore";
 import "firebase/auth";

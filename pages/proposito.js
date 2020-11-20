@@ -29,7 +29,7 @@ export default class extends PureComponent {
 
                 <style jsx global>{`
                     body {
-                        background: url("/images/proposito-background.jpg");
+                        background: url("/images/misc/proposito-background.jpg");
                         background-size: cover;
                     }
 

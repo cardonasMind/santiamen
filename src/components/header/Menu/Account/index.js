@@ -1,42 +1,19 @@
 import React, { Fragment, useContext } from "react";
 
-import Link from "next/link";
+import { MainContext } from "../../../../config/MainContext";
 
-import { MainContext } from "../../config/MainContext";
-
+import Logged from "./Logged";
 import Login from "./Login";
 
-import { Button } from "rsuite";
-
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-
-const Account = () => {
+export default function Account() {
     const context = useContext(MainContext);
 
     const { uid, name, photoURL, handleLogout } = context;
-
+    
     return(
         <div id="menu-account">
             <div id="account-data">
-                {
-                    uid !== ""
-                    ?
-                        <Fragment>
-                            {
-                                name ? <Link href={`/negocio/${uid}`}><a><h2>{name}</h2></a></Link>
-                                :
-                                    <h2><SkeletonTheme color="rgba(0, 0, 0, .1)" highlightColor="rgba(0, 0, 0, .2)">
-                                        <Skeleton width="80%" height="1.4rem" duration={3} />
-                                    </SkeletonTheme></h2>
-                            }
-                            <Button color="red" size="xs" onClick={handleLogout}>Cerrar sesión</Button>
-                        </Fragment>
-                    :
-                        <Fragment>
-                            <Login />
-                        </Fragment>
-                }
-                
+                { uid !== "" ? <Logged name={name} uid={uid} handleLogout={handleLogout} /> : <Login /> }   
             </div>
             <div id="account-photo" />
 
@@ -62,10 +39,7 @@ const Account = () => {
                     background-size: cover;
                     background-position: center;
                 }
-            
             `}</style>
         </div>
     )
 }
-
-export default Account;

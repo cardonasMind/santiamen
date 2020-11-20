@@ -7,7 +7,7 @@ import { Button, Notification, Modal, Icon } from "rsuite";
 
 import { MainContext } from "../../config/MainContext";
 
-import { NumberToMoney } from "../../config/Utils";
+import { numberToMoney } from "../../utils";
 
 import OrderListProduct from "./OrderListProduct";
 import OrderStage from "./OrderStage";
@@ -62,7 +62,7 @@ export default class extends PureComponent {
             totalPrice += price * amount;
         });
 
-        return NumberToMoney(totalPrice);
+        return numberToMoney(totalPrice);
     }
 
     goHome = () => {

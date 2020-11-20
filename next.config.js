@@ -8,6 +8,6 @@ module.exports = withStyles({
     javascriptEnabled: true,
   },
   cssLoaderOptions: {
-    url: false
+    url: true
   }
 })

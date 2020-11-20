@@ -5,7 +5,7 @@ import { Button, Drawer, InputNumber } from "rsuite";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
 import { MainContext } from "../config/MainContext";
-import { NumberToMoney } from "../config/Utils";
+import { numberToMoney } from "../utils";
 
 class ProductDrawer extends PureComponent {
     static contextType = MainContext;
@@ -50,7 +50,7 @@ class ProductDrawer extends PureComponent {
                     <div className="product-image" />
                     <div className="product-data">
                         <h1>{name}</h1>
-                        <h2>$ {NumberToMoney(price)}</h2>
+                        <h2>$ {numberToMoney(price)}</h2>
                     </div>
                 </div>
 
@@ -128,7 +128,7 @@ export default class extends PureComponent {
                     }
 
                     {
-                        price ? <p>$ {NumberToMoney(price)}</p>
+                        price ? <p>$ {numberToMoney(price)}</p>
                         :
                             <SkeletonTheme color="rgba(255, 255, 255, .1)" highlightColor="rgba(255, 255, 255, .2)">
                                 <Skeleton width="60%" duration={3} />

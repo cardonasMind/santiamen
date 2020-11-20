@@ -1,26 +1,14 @@
 import React from "react";
 
-import Link from "next/link";
-
-import { Icon } from 'rsuite';
-
+import BackArrow from "./BackArrow";
 import Menu from "./Menu";
 
-const Header = ({ back, resetOrderList }) => {
+export default function Header(props) {
     return(
         <div id="header-navigation">
-            <span>
-                {back && 
-                    <div onClick={resetOrderList}>
-                        <Link href="/" >
-                            <a><Icon icon="angle-left" size="2x" /></a>
-                        </Link>
-                    </div>
-                }
-            </span>
-
+            <BackArrow {...props} />
             <Menu />
-
+            
             <style jsx global>{`
                 #header-navigation {
                     display: inline-flex;
@@ -35,10 +23,7 @@ const Header = ({ back, resetOrderList }) => {
                 #header-navigation span * {
                     color: white;
                 }
-            
             `}</style>
         </div>
     )
 }
-
-export default Header;

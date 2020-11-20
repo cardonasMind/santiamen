@@ -2,7 +2,7 @@ import React from "react";
 
 import { IconButton, Icon } from "rsuite";
 
-import { NumberToMoney } from "../../config/Utils";
+import { numberToMoney } from "../../utils";
 
 const OrderListProduct = ({ id, name, photoURL, price, amount, removeProductFromOrderList }) => {
     return(
@@ -10,7 +10,7 @@ const OrderListProduct = ({ id, name, photoURL, price, amount, removeProductFrom
             <div className="orderListProductImage" />
             <div className="orderListProductInfo">
                 <h2><div className="orderListProductAmount">x{amount}</div> {name}</h2>
-                <h3 className="orderListProductPrice">$ {NumberToMoney(price)}</h3>
+                <h3 className="orderListProductPrice">$ {numberToMoney(price)}</h3>
             </div>
             {
                 removeProductFromOrderList && 

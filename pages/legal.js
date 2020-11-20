@@ -31,7 +31,7 @@ export default class extends PureComponent {
 
                 <style jsx global>{`
                     body {
-                        background: url("/images/legal-background.jpg");
+                        background: url("/images/misc/legal-background.jpg");
                         background-size: cover;
                     }
 

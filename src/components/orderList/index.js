@@ -6,7 +6,7 @@ import { MainContext } from "../../config/MainContext";
 
 import OrderListProduct from "./OrderListProduct";
 import Checkout from "./Checkout";
-import { NumberToMoney } from "../../config/Utils";
+import { numberToMoney } from "../../utils";
 
 export default class extends PureComponent {
     static contextType = MainContext;
@@ -28,7 +28,7 @@ export default class extends PureComponent {
             totalPrice += price * amount;
         });
 
-        return NumberToMoney(totalPrice);
+        return numberToMoney(totalPrice);
     }
 
     render() {

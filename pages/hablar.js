@@ -45,10 +45,10 @@ export default class extends PureComponent {
                         <p>person.cardonadiego@gmail.com</p>
                     </div>
                 </main>
-
+                
                 <style jsx global>{`
                     body {
-                        background: url("/images/hablar-background.jpg");
+                        background: url("/images/misc/hablar-background.jpg");
                         background-size: cover;
                     }
 
@@ -71,7 +71,7 @@ export default class extends PureComponent {
                         background: rgba(255, 255, 255, .6);
                         margin: auto -1rem;
                         padding: 2rem;
-                    }
+                    }       
                 `}</style>
             </Fragment>
         )

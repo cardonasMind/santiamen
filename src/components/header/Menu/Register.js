@@ -2,7 +2,7 @@ import { PureComponent } from "react";
 
 import { Form, FormGroup, Input, RadioGroup, Radio, Button, Notification } from "rsuite";
 
-import PreviewAndGetImage from "../PreviewAndGetImage";
+import PreviewAndGetImage from "../../PreviewAndGetImage";
 
 export default class extends PureComponent {
     state = {

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { NumberToMoney } from "../../config/Utils";
+import { numberToMoney } from "../../utils";
 
 const OrderProduct = ({ amount, name, photoURL, price }) => {
     return(
@@ -8,7 +8,7 @@ const OrderProduct = ({ amount, name, photoURL, price }) => {
             <div className="orderProductImage" />
             <div className="orderProductInfo">
                 <h2><div className="orderProductAmount">x{amount}</div> {name}</h2>
-                <h3>$ {NumberToMoney(price)}</h3>
+                <h3>$ {numberToMoney(price)}</h3>
             </div>
 
             <style jsx>{`

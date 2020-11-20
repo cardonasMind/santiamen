@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { MainContext } from "../src/config/MainContext";
 
-import Header from "../src/components/header";
+import Header from "../src/components/Header";
 import BusinessList from "../src/components/BusinessList";
 import BusinessCard from "../src/components/BusinessCard";
 
@@ -39,11 +39,11 @@ export default class extends PureComponent {
             <main>
                 <BusinessList />
             </main>
-
+            
             <style jsx global>{`
                 header {
                     background-color: var(--red);
-                    background-image: url("/images/index-background.jpg");
+                    background-image: url("/images/misc/index-background.jpg");
                     background-attachment: fixed;
                     background-size: contain;
                     height: 180px;
@@ -64,7 +64,7 @@ export default class extends PureComponent {
                     margin: 0 1rem;
                     margin-top: -2rem;
                     border-radius: .6rem;
-                }
+                }  
             `}</style>
         </Fragment>
         );
