@@ -1,4 +1,4 @@
-const firebaseConfig = {
+const config = {
     apiKey: "AIzaSyAZlR9oXcF93dcKsQLie7W3hrrjnWGw5Qw",
     authDomain: "santiamen-cf351.firebaseapp.com",
     databaseURL: "https://santiamen-cf351.firebaseio.com",
@@ -9,4 +9,4 @@ const firebaseConfig = {
     measurementId: "G-L34J3JP0T5"
 };
 
-export default firebaseConfig;
+export default config;

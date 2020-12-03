@@ -1,7 +1,5 @@
-function numberToMoney(number) {
+export default function numberToMoney(number) {
     return new Intl.NumberFormat("en-US", {
         style: "decimal", currency: "COP", minimumFractionDigits: 0
     }).format(number)
 }
-
-export default numberToMoney;
