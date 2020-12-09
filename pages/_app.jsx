@@ -17,6 +17,7 @@ export default class extends App {
                     <meta charSet="UTF-8" />
                     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                     <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
+                    <meta name="mobile-web-app-capable" content="yes" />
                     <title>⚡️ Santiamén | Comida a domicilio en San Carlos Antioquia</title>
                     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
                     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
@@ -51,10 +52,12 @@ export default class extends App {
 
                     h1 {
                         font-size: 1.6rem;
+                        line-height: 1.6rem;
                     }
 
                     h2 {
                         font-size: 1.4rem;
+                        line-height: 1.4rem;
                     }
 
                     h3 {

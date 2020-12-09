@@ -23,10 +23,10 @@ export default class extends PureComponent {
 
     handleRegister = () => {
         const { name, category, photoURL } = this.state;
-        //const { registerBusiness } = this.context;
+        const { registerBusiness } = this.context.business;
         
         if(name !== "" && category !== "" && photoURL !== "") {
-            //registerBusiness(name, category, photoURL);
+            registerBusiness(name, category, photoURL);
         } else {
             Notification.info({
                 title: "Espera",

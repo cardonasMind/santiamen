@@ -1,17 +1,17 @@
 import { PureComponent } from "react";
 
-import AddProduct from "./AddProduct";
+import NewProduct from "./NewProduct";
 import PrintProducts from "./PrintProducts";
 
 export default class extends PureComponent {
     render() {
-        const { isBusinessOwner, products } = this.props;
+        const { isBusinessOwner, id, products } = this.props;
         
         return (
             <div className="categoryProductsContainer">
                 <div className="categoryProducts">
-                    <AddProduct isBusinessOwner={isBusinessOwner} />
-                    <PrintProducts isBusinessOwner={isBusinessOwner} products={products} />
+					<NewProduct isBusinessOwner={isBusinessOwner} id={id} />
+                    <PrintProducts isBusinessOwner={isBusinessOwner} categoryID={id} products={products} />
                 </div>
                 
                 <style jsx>{`

@@ -66,9 +66,8 @@ export default function EditBusinessForm({ active, name, photoURL, backgroundURL
                     background-position: center;
                     width: 80px;
                     height: 80px;
-                    border-radius: .6rem;
-                    border: 1px solid rgb(0, 0, 0, .2);
-                    background-color: rgba(0, 0, 0, .2);
+                    border-radius: .4rem;
+                    background-color: rgba(0, 0, 0, .15);
                 }
 
                 #background-uploader {
@@ -81,8 +80,7 @@ export default function EditBusinessForm({ active, name, photoURL, backgroundURL
                 #background-preview {
                     width: 100%;
                     height: 140px;
-                    border: 1px solid rgb(0, 0, 0, .2);
-                    background-color: rgba(0, 0, 0, .2);
+                    background-color: rgba(0, 0, 0, .15);
                     background-image: url(${backgroundURL ? backgroundURL : ""});
                     background-size: cover;
                     background-position: center;

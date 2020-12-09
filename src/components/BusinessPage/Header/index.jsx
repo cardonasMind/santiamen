@@ -36,14 +36,14 @@ export default function BusinessPageHeader({ isBusinessOwner, business }) {
                     right: 0;
                     bottom: 0;
                     left: 0;
-                    background: linear-gradient(transparent, #2B2B2B);
+                    background: linear-gradient(transparent, #2F2F2F);
                     z-index: -1;
                 }
 
                 .businessCard {
                     background: transparent !important;
                     border: none !important;
-                    margin: 0 !important;
+                    margin: 1rem;
                     color: white;
                 }
             `}</style>

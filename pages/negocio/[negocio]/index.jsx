@@ -1,6 +1,6 @@
 import { PureComponent, Fragment } from "react";
 
-import { MainContext } from "../../../src/context";
+import { mainContext } from "../../../src/context";
 
 import { firebase } from "../../../src/config";
 
@@ -9,7 +9,7 @@ import { Notification } from "rsuite";
 import NegocioPage from "./negocio";
 
 export default class extends PureComponent {
-    static contextType = MainContext;
+    static contextType = mainContext;
     
     state = {
         category1: {
@@ -47,10 +47,16 @@ export default class extends PureComponent {
     static getInitialProps({ query }) {
         return { query }
     }
+	
+	componentDidUpdate(prevProps) {
+		// Set business key in context to use it in the different components that need it and avoid prop drilling
+		const { setCurrentBusinessKey } = this.context.business;
+		setCurrentBusinessKey(prevProps.query.negocio);
+	}
 
     componentDidMount() {
         const businessKey = this.props.query.negocio;
-        const { uid } = this.context;
+        const { uid } = this.context.user;
 
         /*             GETTING CATEGORIES AND THEIR PRODUCTS            */
         for(let i = 1; i < 7; i++) {
@@ -89,20 +95,20 @@ export default class extends PureComponent {
     }
 
     componentWillUnmount() {
-        const { resetOrderList } = this.context;
-        
-        resetOrderList();
+        const { resetOrderCart } = this.context.order;
+        resetOrderCart();
     }
 
     render() {
-        const { uid, business, businessKeys } = this.context;
+        const { uid } = this.context.user;
+        const { business, businessKeys } = this.context.business;
         const businessKey = this.props.query.negocio;
         const businessData = business[businessKeys.indexOf(businessKey)];
         
         const categories = Object.values([this.state][0])
         
         const isBusinessOwner = uid === businessKey;
-        
+	
         return <NegocioPage isBusinessOwner={isBusinessOwner} business={businessData} categories={categories} />
     }
 }

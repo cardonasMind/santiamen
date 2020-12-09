@@ -25,7 +25,7 @@ export default class extends PureComponent {
                 <style jsx global>{`
                     body {
                         padding-bottom: 4rem;
-                        background: #2B2B2B !important;
+                        background: #2F2F2F !important;
                     }
                 `}</style>
             </Fragment>

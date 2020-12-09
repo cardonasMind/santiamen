@@ -1,13 +1,13 @@
 import { PureComponent } from "react";
 
-import { MainContext } from "../../../../../../../context";
+import { mainContext } from "../../../../../../../context";
 
 import { InputNumber, Button } from "rsuite";
 
 import { numberToMoney } from "../../../../../../../utils";
 
 export default class extends PureComponent {
-    static contextType = MainContext;
+    static contextType = mainContext;
 
     state = {
         amount: 1
@@ -18,7 +18,7 @@ export default class extends PureComponent {
     addProductToOrderCart = () => {
         const { amount } = this.state;
         const { id, photoURL, name, price, toggleShowProductDrawer } = this.props;
-        const { addProductToOrderCart } = this.context;
+        const { addProductToOrderCart } = this.context.order;
 
         const product = {
             id,
@@ -86,7 +86,7 @@ export default class extends PureComponent {
                         width: 10rem;
                         height: 20rem;
                         border-radius: .6rem;
-                        background-color: rgba(0, 0, 0, .6);
+                        background-color: rgba(0, 0, 0, .1);
                         background-image: url(${photoURL});
                         background-size: cover;
                         background-position: center;

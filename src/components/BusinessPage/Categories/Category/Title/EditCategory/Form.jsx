@@ -1,8 +1,12 @@
 import { PureComponent } from "react";
 
+import { mainContext } from "../../../../../../context";
+
 import { Notification, Form, FormGroup, Toggle, Input, Button } from "rsuite";
 
 export default class extends PureComponent {
+    static contextType = mainContext;
+    
     state = {
         title: this.props.title,
         visible: this.props.visible
@@ -14,11 +18,10 @@ export default class extends PureComponent {
 
     updateCategory = () => {
         const { title, visible } = this.state;
-        const { id, updateCategory, toggleShowEditCategoryDrawer } = this.props;
-        
-        alert("¡¡ACTUALIZAR CATEGORÍA!!");
+        const { id, toggleShowEditCategoryDrawer } = this.props;
+        const { updateCategory } = this.context.business;
 
-        /*if(title !== "") {
+        if(title !== "") {
             updateCategory(`category${id}`, title, visible);
             toggleShowEditCategoryDrawer();
         } else {
@@ -26,7 +29,7 @@ export default class extends PureComponent {
                 title: "Espera",
                 description: "Escribe el nombre de la categoría."
             });
-        }*/
+        }
     }
 
     render() {

@@ -28,8 +28,12 @@ export default function BusinessOwnerCard() {
                         background: white;
                         margin: 0 1rem;
                         margin-top: -2rem;
-                        border-radius: .6rem;
+                        border-radius: .2rem;
                     }
+					
+					h2 {
+						margin-bottom: 1rem;
+					}
                 `}</style> 
             </div>
         )

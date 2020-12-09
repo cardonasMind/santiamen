@@ -2,28 +2,24 @@ import { PureComponent } from "react";
 
 import EditCategory from "./EditCategory";
 
+import { PlaceHolderElement } from "../../../../../utils";
+
 export default class extends PureComponent {
     render() {
         const { title } = this.props;
         
         return(
             <h1>
-                {title ? title : <div className="placeHolderElement" />}
+                {title ? title : <PlaceHolderElement width="60vw" height="1.6rem" opacity=".1" />}
                 
                 <EditCategory {...this.props} /> {/* isBusinessOwner, id, visible, title */}
                 
                 <style jsx>{`
                     h1 {
                         display: grid;
-                        grid-template-columns: 1fr auto;
+                        grid-template-columns: auto 1fr;
                         grid-gap: .6rem;
                         color: white;
-                    }
-
-                    .placeHolderElement {
-                        background: rgba(255, 255, 255, .2);
-                        width: 60%;
-                        height: 1.6rem;
                     }
                 `}</style>
             </h1>

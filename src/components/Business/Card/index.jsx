@@ -30,9 +30,6 @@ export default function BusinessCard({ photo, name, active }) {
 
                 .businessInfo {
                     padding: 1rem 0;
-                    display: grid;
-                    grid-gap: .4rem;
-                    grid-auto-columns: max-content;
                 }
             `}</style>
         </div>

@@ -18,7 +18,7 @@ export default class extends PureComponent {
 				<h2 onClick={this.toggleShowLoginDrawer}>Acceder</h2>
 			
 				<LoginDrawer showLoginDrawer={showLoginDrawer} toggleShowLoginDrawer={this.toggleShowLoginDrawer}>
-                    <LoginForm />
+                    <LoginForm toggleShowLoginDrawer={this.toggleShowLoginDrawer} />
                 </LoginDrawer>
 			</Fragment>
 		)

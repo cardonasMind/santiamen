@@ -1,4 +1,5 @@
 export const businessState = {
     business: [],
-    businessKeys: []
+    businessKeys: [],
+	currentBusinessKey: ""
 };

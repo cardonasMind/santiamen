@@ -1,17 +1,13 @@
 import { PureComponent, Fragment } from "react";
 
-import { mainContext } from "../src/context";
-
-//import Header from "../src/components/Header";
+import Header from "../src/components/Header";
 import { BusinessOwnerCard, BusinessList } from "../src/components/Business";
 
 export default class extends PureComponent {
-    static contextType = mainContext;
-
     render () {
         return (
             <Fragment>
-                {/*<Header />*/}
+                <Header />
 
                 <header>
                     <h1>Santiamén</h1>

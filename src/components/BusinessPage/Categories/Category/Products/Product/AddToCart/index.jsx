@@ -19,7 +19,7 @@ export default class extends PureComponent {
         const { showProductDrawer } = this.state;
         const { id, name, description, price, photoURL } = this.props;
         
-        return (
+        return name ? (
             <Fragment>
                 <Button size="xs" block onClick={this.toggleShowProductDrawer}>
                     Añadir
@@ -33,6 +33,7 @@ export default class extends PureComponent {
                     </Drawer.Body>
                 </Drawer>
             </Fragment>
-        )
+        ) 
+        : null
     }
 }

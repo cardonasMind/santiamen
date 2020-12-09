@@ -20,7 +20,7 @@ export default class extends PureComponent {
         if (isBusinessOwner)
             return (
                 <div className="editCategory">
-                    <Button onClick={this.showEditCategoryDrawer} appearance="primary" size="xs" >
+                    <Button onClick={this.toggleShowEditCategoryDrawer} appearance="primary" size="xs" >
                         <Icon icon="gear" />
                     </Button>
                     

@@ -35,6 +35,7 @@ export class MainContextProvider extends PureComponent {
 		
 		// businessActions binded
 		businessActions.getBusinessList = businessActions.getBusinessList.bind(this);
+		businessActions.setCurrentBusinessKey = businessActions.setCurrentBusinessKey.bind(this);
 		businessActions.registerBusiness = businessActions.registerBusiness.bind(this);
 		businessActions.updateCategory = businessActions.updateCategory.bind(this);
 		businessActions.newProduct = businessActions.newProduct.bind(this);
@@ -61,17 +62,12 @@ export class MainContextProvider extends PureComponent {
         firebase.auth().onAuthStateChanged(user => {
             if(user) {
 				// Get user data from DB
+				const { uid } = user;
+				this.setState(prevState => ({ user: {...prevState.user, uid} }));
 				userActions.accountFromDB();
-				
-                // User is logged
-                /*const { uid } = user;
-                this.setState({ uid });*/
-
-                // Load data from DB
-                //this.userAccountFromDB(uid);
             } else {
                 // User isn´t logged now
-                this.setState(this.baseState);
+				this.setState(this.baseState);
             }
         });
 		

@@ -1,13 +1,21 @@
 import { PureComponent } from "react";
 
+import { firebase } from "../../../../../config";
+
+import { mainContext } from "../../../../../context";
+
+import { Notification } from "rsuite";
+
 import EditBusinessForm from "./Form";
 
 export default class extends PureComponent {
+    static contextType = mainContext;
+    
     state = {
-        active: "this.context.active",
-        name: "this.context.name",
-        photoURL: "this.context.photoURL",
-        backgroundURL: "this.context.backgroundURL"
+        active: this.context.user.active,
+        name: this.context.user.name,
+        photoURL: this.context.user.photoURL,
+        backgroundURL: this.context.user.backgroundURL
     }
 
     handleActive = active => this.setState({ active });
@@ -22,13 +30,13 @@ export default class extends PureComponent {
         const { active, name, photoURL, backgroundURL } = this.state;
         const { toggleShowEditBusinessDrawer } = this.props;
         
-        alert("!!ACTUALIZAR NEGOCIO!!");
-        /*const { uid, updateBusiness } = this.context;
+        const { uid } = this.context.user;
+        const { updateBusinessAccount } = this.context.user;
 
         if(name !== "") {
             const storageRef = firebase.storage().ref();
 
-            if(photoURL !== this.context.photoURL && backgroundURL !== this.context.backgroundURL) {
+            if(photoURL !== this.context.user.photoURL && backgroundURL !== this.context.user.backgroundURL) {
                  // User have changed photoURL and backgroundURl
                 Notification.info({
                     title: "Espera",
@@ -36,18 +44,17 @@ export default class extends PureComponent {
                 });
 
                 // Upload the selected images to firebase and then get the URL
-                const uploadBusinessLogo = storageRef.child(`business/${uid}/logo`)
-                    .putString(photoURL, 'data_url');
+                const uploadBusinessLogo = storageRef.child(`business/${uid}/logo`).putString(photoURL, 'data_url');
 
                 const uploadBusinessBackground = storageRef.child(`business/${uid}/background`)
-                    .putString(backgroundURL, 'data_url');
+                .putString(backgroundURL, 'data_url');
 
                 // First upload photoURL and then backgroundURL
                 uploadBusinessLogo.then(snapshot => {
                     snapshot.ref.getDownloadURL().then(downloadPhotoURL => {
                         uploadBusinessBackground.then(snapshot => {
                             snapshot.ref.getDownloadURL().then(downloadBackgroundURL => {
-                                updateBusiness(active, name, downloadPhotoURL, downloadBackgroundURL);
+                                updateBusinessAccount(active, name, downloadPhotoURL, downloadBackgroundURL);
                                 toggleShowEditBusinessDrawer();
                             })
                         })
@@ -66,7 +73,7 @@ export default class extends PureComponent {
                     });
                 });
 
-            } else if(photoURL !== this.context.photoURL) {
+            } else if(photoURL !== this.context.user.photoURL) {
                 // User only have changed photoURL
                 Notification.info({
                     title: "Espera",
@@ -74,12 +81,11 @@ export default class extends PureComponent {
                 });
     
                 // Upload the selected image to firebase and then get the URL
-                const uploadBusinessLogo = storageRef.child(`business/${uid}/logo`)
-                    .putString(photoURL, 'data_url');
+                const uploadBusinessLogo = storageRef.child(`business/${uid}/logo`).putString(photoURL, 'data_url');
                         
                 uploadBusinessLogo.then(snapshot => {
                     snapshot.ref.getDownloadURL().then(downloadURL => {
-                        updateBusiness(active, name, downloadURL, backgroundURL);
+                        updateBusinessAccount(active, name, downloadURL, backgroundURL);
                         toggleShowEditBusinessDrawer();
                     })
                 })
@@ -90,7 +96,7 @@ export default class extends PureComponent {
                     });
                 });
 
-            } else if(backgroundURL !== this.context.backgroundURL) {
+            } else if(backgroundURL !== this.context.user.backgroundURL) {
                 // User only have changed backgroundURL
                 Notification.info({
                     title: "Espera",
@@ -99,11 +105,11 @@ export default class extends PureComponent {
     
                 // Upload the selected image to firebase and then get the URL
                 const uploadBusinessBackground = storageRef.child(`business/${uid}/background`)
-                    .putString(backgroundURL, 'data_url');
+                .putString(backgroundURL, 'data_url');
                         
                 uploadBusinessBackground.then(snapshot => {
                     snapshot.ref.getDownloadURL().then(downloadURL => {
-                        updateBusiness(active, name, photoURL, downloadURL);
+                        updateBusinessAccount(active, name, photoURL, downloadURL);
                         toggleShowEditBusinessDrawer();
                     })
                 })
@@ -116,7 +122,7 @@ export default class extends PureComponent {
 
             } else {
                 // User haven´t changed images
-                updateBusiness(active, name, photoURL, backgroundURL);
+                updateBusinessAccount(active, name, photoURL, backgroundURL);
                 toggleShowEditBusinessDrawer();
             }
         } else {
@@ -124,7 +130,7 @@ export default class extends PureComponent {
                 title: "Espera",
                 description: "Falta el nombre de tu negocio."
             });
-        */
+        }
     }
 
     render() {

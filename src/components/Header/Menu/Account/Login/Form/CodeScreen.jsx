@@ -19,6 +19,12 @@ export default function CodeScreen({ phoneCode, handleChange, handlePhoneCode })
             <FormGroup>
 				<Button appearance="primary" onClick={handlePhoneCode}>Acceder</Button>
             </FormGroup>
+			
+			<style jsx>{`
+				h2 {
+					margin-bottom: .4rem;
+				}
+			`}</style>
         </Form>
 	)
 }

@@ -16,7 +16,7 @@ export default class extends PureComponent {
     render() {
         const { isBusinessOwner } = this.props;
         const { showEditBusinessDrawer } = this.state;
-                                     
+
         if(isBusinessOwner) 
             return (
                 <div id="edit-business">

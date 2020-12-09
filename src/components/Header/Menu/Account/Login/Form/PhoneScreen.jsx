@@ -24,6 +24,12 @@ export default function PhoneScreen({ phoneNumber, handleChange, handleSendPhone
 					Enviar código
 				</Button>
             </FormGroup>
+			
+			<style jsx>{`
+				h2 {
+					margin-bottom: .4rem;
+				}
+			`}</style>
         </Form>
 	)
 }

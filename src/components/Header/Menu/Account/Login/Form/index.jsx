@@ -56,6 +56,7 @@ export default class extends PureComponent {
 
     handlePhoneCode = () => {
         const { phoneCode, confirmationResult } = this.state;
+		const { toggleShowLoginDrawer } = this.props;
 
         if(phoneCode.length === 6) {
             confirmationResult.confirm(phoneCode)
@@ -65,9 +66,8 @@ export default class extends PureComponent {
                     description: '¡Acabas de iniciar sesión!'
                 });
 
-                this.toggleShowLoginDrawer();
+                toggleShowLoginDrawer();
             })
-
             .catch(error => {
                 Notification.error({
                     title: "Ocurrió un error",

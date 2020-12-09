@@ -2,7 +2,7 @@ import { firebase } from "../../../config";
 
 import { Notification } from "rsuite";
 
-export default function newProduct(category, name, price, photoURL, description, toggleShowAddProductDrawer) {
+export default function newProduct(category, name, price, photoURL, description, toggleShowNewProductDrawer) {
 	const { uid } = this.state.user;
     const storageRef = firebase.storage().ref();
 	
@@ -29,7 +29,7 @@ export default function newProduct(category, name, price, photoURL, description,
                     description: `Acabas de agregar un nuevo producto: ${name}`
                 });
 
-                toggleShowAddProductDrawer();
+                toggleShowNewProductDrawer();
             })
             .catch(error => {
                 Notification.error({
