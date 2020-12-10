@@ -20,7 +20,6 @@ export default function RegisterForm({ name, category, photoURL, handleName, han
                 <h2>Categoría</h2>
                 <RadioGroup value={category} onChange={handleCategory}>
                     <Radio value="fast-food">Comida rápida</Radio>
-                    <Radio value="restaurant">Restaurante</Radio>
                 </RadioGroup>
             </FormGroup>
 

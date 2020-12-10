@@ -1,56 +1,59 @@
 import { PureComponent, createRef } from "react";
 
-import { Progress } from 'rsuite';
+import { Progress } from "rsuite";
 
 export default class extends PureComponent {
-    constructor() {
-        super();
-
-        this.firstItem = createRef();
-        this.secondItem = createRef();
-        this.thirdItem = createRef();
-        this.fourthItem = createRef();
-
-        this.state = {
-            stage: 0,
-    
-            items: [
-                this.firstItem,
-                this.secondItem,
-                this.thirdItem,
-                this.fourthItem
-            ],
-    
-            stages: [
-                {
-                    progress: 0,
-                    message: "Espera a que confirmen tu pedido."
-                },
-                {
-                    progress: 50,
-                    message: `Están preparando tu pedido y estará listo en ___`
-                },
-                {
-                    progress: 80,
-                    message: "¡Tu pedido está llegando!"
-                },
-                {
-                    progress: 100,
-                    message: "Disfruta tu pedido 😋 y gracias por confiar en nosotros."
-                }
-            ]
-        }
-    }
-
-    renderStage = () => {
+	constructor() {
+		super();
+		
+		this.firstItem = createRef();
+		this.secondItem = createRef();
+		this.thirdItem = createRef();
+		this.fourthItem = createRef();
+		
+		this.state = {
+			stage: 0,
+			
+			items: [
+				this.firstItem,
+				this.secondItem,
+				this.thirdItem,
+				this.fourthItem
+			],
+			
+			stages: [
+				{
+					progress: 0,
+					message: "Espera a que confirmen tu pedido."
+				},
+				{
+					progress: 50,
+					message: `Están preparando tu pedido y estará listo en ___`
+				},
+				{
+					progress: 80,
+					message: "¡Tu pedido está llegando!"
+				},
+				{
+					progress: 100,
+					message: "Disfruta tu pedido 😋 y gracias por confiar en nosotros."
+				}
+			]
+		}
+	}
+	
+	
+	
+	renderStage = () => {
         const { stage, items } = this.state;
 
+		// Change the message of the second element of stages in order to add the time setted for the business owner
         const stages = this.state.stages;
-        stages[1].message = 
-            `Están preparando tu pedido y estará listo en ${this.props.time}`;
-        
+        stages[1].message = `Están preparando tu pedido y estará listo en ${this.props.time}`;
+		
         this.setState({ stage: this.props.stage, stages });        
 
+		// Paint with green a stage item
         const paintItem = item => {
             const { children } = item.current;
 
@@ -68,14 +71,14 @@ export default class extends PureComponent {
             }
         }
     }
-
-    render() {
-        const { stage, items, stages } = this.state;
+	
+	render() {
+		const { stage, items, stages } = this.state;
         const stageInfo = stages[stage];
-
-        this.renderStage();
-
-        return(
+		
+		this.renderStage();
+		
+		return(
             <div className="orderStage">
                 <div className="orderStageProgress">
                     <Progress.Line strokeColor="var(--green)" percent={stageInfo.progress} showInfo={false} />
@@ -110,8 +113,6 @@ export default class extends PureComponent {
                         </div>
                 }
                     
-                
-
                 <style jsx>{`
                     .orderStage {
                         position: relative;
@@ -162,5 +163,5 @@ export default class extends PureComponent {
                 `}</style>
             </div>
         )
-    }
+	}
 }

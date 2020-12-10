@@ -1,5 +1,7 @@
 import { PureComponent } from "react";
 
+import Router from "next/router";
+
 import { Button, Modal, Icon } from "rsuite";
 
 export default class extends PureComponent {
@@ -8,6 +10,9 @@ export default class extends PureComponent {
 	}
 	
 	toggleShowGoHomeModal = () => this.setState(prevState => ({ showGoHomeModal: !prevState.showGoHomeModal }));
+	
+	// Go home when users clicks on VOlver al inicio inside goHomeModal, using Router.push the page don´t refresh, it´s like a Link
+	goHome = () => Router.push("/");
 	
 	render() {
 		const { showGoHomeModal } = this.state;
@@ -32,7 +37,7 @@ export default class extends PureComponent {
                         <p style={{ textAlign: "justify" }}>Si vuelves al inicio no podrás conocer el estado de tu pedido.</p>
                     </Modal.Body>
 					<Modal.Footer>
-                        <Button href="/" appearance="primary">Volver al inicio</Button>
+                        <Button onClick={this.goHome} appearance="primary">Volver al inicio</Button>
                         <Button onClick={this.toggleShowGoHomeModal} appearance="subtle">Cancelar</Button>
 					</Modal.Footer>
                 </Modal>

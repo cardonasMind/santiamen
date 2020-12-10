@@ -51,7 +51,7 @@ export default class extends PureComponent {
                         right: 0;
                         bottom: 0;
                         left: 0;
-                        transition: .2s;
+                        transition: .1s;
                         z-index: 10000;
                         background-color: white;
                         background-image: url("/images/misc/auth-background.jpg");

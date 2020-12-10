@@ -17,8 +17,8 @@ export default class extends PureComponent {
 		const { date, name, id, stage } = this.props;
 		
 		return (
-			<div className="orderDetails" onClick={this.toggleShowOrderDetailsDrawer}>
-				<Icon icon="angle-right" size="2x" />
+			<div className="orderDetails">
+				<Icon icon="angle-right" size="2x" onClick={this.toggleShowOrderDetailsDrawer}/>
 				
 				<OrderDetailsDrawer showOrderDetailsDrawer={showOrderDetailsDrawer} 
 					toggleShowOrderDetailsDrawer={this.toggleShowOrderDetailsDrawer} date={date} name={name} id={id} stage={stage}>
